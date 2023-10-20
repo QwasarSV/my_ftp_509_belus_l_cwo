@@ -15,28 +15,28 @@ void dynamic_malloc(int argc, char** argv, my_getopt_t *getopt_ptr)
     }
 }
 
-void dynamic_free(int argc, char** argv, my_getopt_t *getopt_ptr)
-{
-    int index = 1; 
-    int count = 0;
-    while (index < argc)
-    {
-        if (argv[index][0] != __DASH_CHAR__)
-        {
-            free(getopt_ptr->str_arr[count]);
-            count += 1;
-        }
-        index += 1;
-    }
-}
-
-
-// void free_str_array( my_getopt_t *getopt_ptr)
+// void dynamic_free(int argc, char** argv, my_getopt_t *getopt_ptr)
 // {
 //     int index = 1; 
-//     while (index < getopt_ptr->nbr_str)
+//     int count = 0;
+//     while (index < argc)
 //     {
-//         free(getopt_ptr->str_arr[index]);
+//         if (argv[index][0] != __DASH_CHAR__)
+//         {
+//             free(getopt_ptr->str_arr[count]);
+//             count += 1;
+//         }
 //         index += 1;
 //     }
 // }
+
+
+void free_str_array( my_getopt_t *getopt_ptr)
+{
+    int index = 0; 
+    while (index < getopt_ptr->nbr_str)
+    {
+        free(getopt_ptr->str_arr[index]);
+        index += 1;
+    }
+}

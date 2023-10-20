@@ -8,14 +8,13 @@
 #include <cstring>
 #include <my_libasm.h>
 
+
 #define VALID_ARG "-abcd"
 
 class MyGeOpt
 {
     private:
         my_getopt_t* GetOptPtr;
-        char** argv;
-        int argc;
 
     public:
     MyGeOpt()
@@ -26,10 +25,10 @@ class MyGeOpt
     }
 
     void FlagParser(std::vector<std::string> tokens)
-    {        
+    {
         int index = 0;
-        argc = tokens.size() - 1;
-        argv = new char*[argc];
+        int argc = tokens.size() - 1;
+        char** argv = new char*[argc];
         while (index < argc)
         {
             argv[index] = new char[tokens[index].length() + 1];
@@ -37,6 +36,13 @@ class MyGeOpt
             index += 1;
         }
         flag_parser(argc, argv, VALID_ARG, GetOptPtr);
+        index = 0;
+        while (index < argc)
+        {
+            delete [] argv[index];
+            index += 1;
+        }
+        delete [] argv;
     }
 
     const std::vector<std::string>& getOptStrArray()
@@ -67,14 +73,7 @@ class MyGeOpt
 
     ~MyGeOpt() 
     {
-        free_opt(argc, argv, GetOptPtr);
-        int index = 0;
-        while (index < argc)
-        {
-            delete [] argv[index];
-            index += 1;
-        }
-        delete [] argv;
+        free_opt(GetOptPtr);
     }
 };
 #endif
