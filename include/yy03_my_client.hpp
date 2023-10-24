@@ -1,7 +1,7 @@
 #ifndef MY_CLIENT_
 #define MY_CLIENT_
 
-#include <my_main_server.hpp>
+#include <yy00_my_main_server.hpp>
 
 unsigned short toUnsShort(int num);
 
@@ -15,7 +15,7 @@ class Client
 
         bool connect()
         {
-            if (!clientSocket.Create())
+            if (!clientSocket.create())
             {
                 return false;
             }
@@ -31,10 +31,10 @@ class Client
             clientSocket.send(msg);
         }
         
-        void receiveFrom(const std::string &msg)
+        std::string receiveFrom()
         {
-            
-
+            std::string msg = clientSocket.receive();
+            return msg;
         }
 
     ~Client() {}

@@ -1,10 +1,9 @@
 #ifndef MY_SERVER_
 #define MY_SERVER_
 
-#include <my_main_server.hpp>
+#include <yy00_my_main_server.hpp>
 
 unsigned short toUnsShort(int num);
-
 
 class Server
 {
@@ -14,33 +13,33 @@ class Server
     public:
         Server() {}
 
-    bool start(int port)
-    {
-        if (!ServerSocket.create()) 
+        bool start(int port)
         {
-            // error
-            return false;
-        }
-        if (ServerSocket.bind(port)) 
-        {
-            // error
-            return false;
-        }
-        if (ServerSocket.listen()) 
-        {
-            // error
-            return false;
+            if (!ServerSocket.create()) 
+            {
+                // error
+                return false;
+            }
+            if (ServerSocket.bind(port)) 
+            {
+                // error
+                return false;
+            }
+            if (ServerSocket.listen()) 
+            {
+                // error
+                return false;
+            }
+
+            return true;
         }
 
-        return true;
-    }
-
-    int waitClientReq()
-    {
-        int clientSocket = ServerSocket.accept();
-        return clientSocket;
-    }
-    ~Server() {}
+        int waitClientReq()
+        {
+            int clientSocket = ServerSocket.accept();
+            return clientSocket;
+        }
+        ~Server() {}
 };
 
 #endif
