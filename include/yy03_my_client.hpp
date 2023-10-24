@@ -13,13 +13,13 @@ class Client
     public:
         Client() {}
 
-        bool connect()
+        bool connect(const std::string &host, int port)
         {
             if (!clientSocket.create())
             {
                 return false;
             }
-            if (!clientSocket.connect())
+            if (!clientSocket.connect(host, port))
             {
                 return false;
             }

@@ -78,6 +78,7 @@ class Syntax
             S_FCS_NOOP              
         };
 
+
         inline static const std::unordered_set<std::string> digits = 
         {
             S_DIGIT_0,
@@ -92,6 +93,7 @@ class Syntax
             S_DIGIT_9
         };
 
+
         inline static const std::unordered_set<std::string> characters =
         {
             S_CHARACTERS_NEWLINE,
@@ -99,6 +101,7 @@ class Syntax
             S_CHARACTERS_DECPOINT,
             S_CHARACTERS_ENDINSTR
         };
+
 
         //help find the corresponding token static set
         inline static const std::unordered_map<std::string, SetVariant_t> tokenMap =
@@ -110,6 +113,7 @@ class Syntax
             { S_CATEGORY_DIGITS,        digits                          }
         };
 
+
         //help find the corresponding token vector
         std::unordered_map<std::string, SharedTokVec_t&> categoryMap =
         {
@@ -119,6 +123,7 @@ class Syntax
             { S_CATEGORY_CHARACTERS,    charactersVec                   },
             { S_CATEGORY_DIGITS,        digitsVec                       }
         };
+
 
         public:
         Syntax(){}

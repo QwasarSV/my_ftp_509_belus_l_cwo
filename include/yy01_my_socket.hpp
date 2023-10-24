@@ -18,22 +18,6 @@ class Socket
         int accept();
         bool connect(const std::string &serverIp = "127.0.0.1", unsigned short port = 0);
         ssize_t send(const std::string &msg);
-        // ssize_t receive(char* buffer, size_t len)
-        // {
-        //     ssize_t byteReceived = recv(socketfd, buffer, len, 0);;
-        //     return byteReceived
-        // }
-        // std::string receive()
-        // {
-        //     char buffer[RW_SIZE];
-        //     std::string answer;
-        //     size_t byteRead = 0;
-        //     while ((byteRead = read(socketFd, buffer, RW_SIZE)))
-        //     {
-        //         answer.append(buffer, byteRead);
-        //     }
-        //     return answer;
-        // }
         std::string receive();
         void closeSocket();
         ~Socket()

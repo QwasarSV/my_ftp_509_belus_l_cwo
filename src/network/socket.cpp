@@ -1,6 +1,13 @@
 #include <yy00_my_main_server.hpp>
 
 
+
+unsigned short toUnsShort(int num)
+{
+    unsigned short us = static_cast<unsigned short>(num);
+    return us;
+}
+
 bool Socket::create()
 {
     socketFd = socket(AF_INET, SOCK_STREAM, 0);
@@ -13,6 +20,7 @@ bool Socket::create()
         return false;
     }
 }
+
 bool Socket::bind(unsigned short port)
 {
     struct sockaddr_in servInfo;
@@ -20,11 +28,11 @@ bool Socket::bind(unsigned short port)
     servInfo.sin_port = htons(port);
     servInfo.sin_addr.s_addr = INADDR_ANY;
     memset(servInfo.sin_zero, 0, sizeof(servInfo.sin_zero));
-    if (::bind(socketFd, (struct sockaddr*)&servInfo, sizeof(servInfo)) == -1)
+    if (::bind(socketFd, (struct sockaddr*)&servInfo, sizeof(servInfo)) != -1)
     {
-        return false; 
+        return true; 
     }
-    return true;
+    return false;
 }
 
 bool Socket::listen()
@@ -36,6 +44,7 @@ bool Socket::listen()
     std::cout << "server listening "  << std::endl;
     return true;
 }
+
 int Socket::accept()
 {
     sockaddr_in clientInfo;
@@ -44,6 +53,7 @@ int Socket::accept()
     clientSocket = ::accept(socketFd, (struct sockaddr*)&clientInfo, &client_len);
     return clientSocket;
 }
+
 bool Socket::connect(const std::string &serverIp, unsigned short port)
 {
     socketFd = socket(AF_INET, SOCK_STREAM, 0);
@@ -67,6 +77,7 @@ bool Socket::connect(const std::string &serverIp, unsigned short port)
     }
     return true;
 }
+
 ssize_t Socket::send(const std::string &msg)
 {
     int len = msg.length();
@@ -75,6 +86,7 @@ ssize_t Socket::send(const std::string &msg)
     byteSent += ::send(socketFd, msg.c_str(), msg.length(), 0);
     return byteSent;
 }
+
 // ssize_t receive(char* buffer, size_t len)
 // {
 //     ssize_t byteReceived = recv(socketfd, buffer, len, 0);;
@@ -103,6 +115,7 @@ std::string Socket::receive()
     delete[] buf;
     return msg;
 }
+
 void Socket::closeSocket()
 {
     close(socketFd);

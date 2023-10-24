@@ -1,6 +1,5 @@
 #include <main_header.hpp>
 
-
 // bool tokenize(std::string &str, const char& delimiter)
 // {
 //     std::string token;
@@ -35,21 +34,33 @@
 //             flag_parser(cmd_count, tokens, VALID_ARG, getopt_ptr);
 //             free_opt(cmd_count, tokens, getopt_ptr);
 
-#include <stdlib.h>
-#include <my_unistd.h>
-#include <stdlib.h>
+
+//getoptobj : 
+
+
+
+// #include <stdlib.h>
+// #include <my_unistd.h>
+// #include <stdlib.h>
 
 int main(int argc, char** argv)
 {
-    std::vector<std::string> tokens;
 
-    for (int i = 0; i < argc; ++i) {
-        tokens.push_back(std::string(argv[i]));
-    }
 
-    MyGeOpt* GetOptObj = new MyGeOpt;  // Constructor called here
-    GetOptObj->FlagParser(tokens);
-    delete GetOptObj;  // Destructor called here
+    // std::vector<std::string> tokens;
+
+    // for (int i = 0; i < argc; ++i) {
+    //     tokens.push_back(std::string(argv[i]));
+    // }
+
+    // MyGeOpt* GetOptObj = new MyGeOpt;  // Constructor called here
+    // GetOptObj->FlagParser(tokens);
+    // delete GetOptObj;  // Destructor called here
+
+
+    ServerTop server(2);
+    server.start(8080);
+    server.waitClientReq();
 
 
 
