@@ -23,13 +23,12 @@ class ClientTCP
             {
                 // error big bad ? 
             }
-            
+
             if (connect(socketFd, (struct sockaddr *)&clientInfo, sizeof(clientInfo)) == -1)
             {
                 // error big bad ? 
             }
         }
-
 
         int ClientReq();
 
@@ -37,5 +36,4 @@ class ClientTCP
         {
             close(socketFd);
         }
-
 };

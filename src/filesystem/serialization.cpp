@@ -46,7 +46,8 @@ std::string Serialize(const std::filesystem::path& filePath)
 void deserialize(const std::string& inputFile, std::filesystem::path& filePath, std::uintmax_t& fileSize, std::filesystem::file_time_type& lastModTime, std::string& fileContent)
 {
     std::ifstream in(inputFile, std::ios::binary);
-    if (!in) {
+    if (!in)
+    {
         std::cerr << "Failed to open input file for deserialization." << std::endl;
         return;
     }
