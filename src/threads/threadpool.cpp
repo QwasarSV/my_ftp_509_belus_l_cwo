@@ -1,6 +1,5 @@
 #include <my_threadpool.hpp>
 
-
 unsigned int GetThreadCount(unsigned int divBy)
 {
      unsigned int nbThread = std::thread::hardware_concurrency();

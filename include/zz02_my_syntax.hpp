@@ -39,8 +39,10 @@ class Syntax
             S_ACC_CWD,             
             S_ACC_CDUP,             
             S_ACC_SMNT,             
-            S_ACC_REIN,             
-            S_ACC_QUIT             
+            S_ACC_QUIT,
+            S_ACC_REIN,
+            S_ACC_EXIT
+            
         };
 
 

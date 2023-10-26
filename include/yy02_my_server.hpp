@@ -10,7 +10,6 @@ class Server
     protected:
         Socket ServerSocket;
 
-
     public:
         Server() {}
 
@@ -42,8 +41,8 @@ class Server
         ~Server() {}
 };
 
-void printTask(int number);
-
+// void printTask(int number);
+void ftpTask(int clientSocket);
 
 class ServerTop : public Server
 {
@@ -74,23 +73,13 @@ class ServerTop : public Server
             while (true) 
             {
                 int clientSocket = ServerSocket.accept();
-                ThreadPool.enqueue([clientSocket]() { printTask(clientSocket); });
+                std::cout << "Incoming client connected" << std::endl;
+                ThreadPool.enqueue([clientSocket]() { ftpTask(clientSocket); });
             }
 
             return true;
         }
         ~ServerTop() {}
 };
-
-// int main() {
-//     ThreadPool pool(2); // 2 worker threads
-
-//     for (int i = 0; i < 5; ++i) {
-//         pool.enqueue([i]() { printTask(i); });
-//     }
-
-//     std::this_thread::sleep_for(std::chrono::seconds(2)); // let threads process tasks
-//     return 0;
-// }
 
 #endif

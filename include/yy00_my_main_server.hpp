@@ -1,5 +1,6 @@
-#ifndef MY_MAIN_LANG_PARAM_
-#define MY_MAIN_LANG_PARAM_
+#ifndef MY_MAIN_SERVER
+#define MY_MAIN_SERVER
+
 
 
 #include <string.h>
@@ -13,10 +14,11 @@
 #include <arpa/inet.h>
 
 #include <my_threadpool.hpp>
-
+#include <zz00_my_main_lang.hpp>
 #include <yy01_my_socket.hpp>
 #include <yy02_my_server.hpp>
 #include <yy03_my_client.hpp>
+#include <yy04_my_ftp.hpp>
 
 #define RW_SIZE 512
 

@@ -1,7 +1,5 @@
 #include <yy00_my_main_server.hpp>
 
-
-
 unsigned short toUnsShort(int num)
 {
     unsigned short us = static_cast<unsigned short>(num);
@@ -87,22 +85,7 @@ ssize_t Socket::send(const std::string &msg)
     return byteSent;
 }
 
-// ssize_t receive(char* buffer, size_t len)
-// {
-//     ssize_t byteReceived = recv(socketfd, buffer, len, 0);;
-//     return byteReceived
-// }
-// std::string receive()
-// {
-//     char buffer[RW_SIZE];
-//     std::string answer;
-//     size_t byteRead = 0;
-//     while ((byteRead = read(socketFd, buffer, RW_SIZE)))
-//     {
-//         answer.append(buffer, byteRead);
-//     }
-//     return answer;
-// }
+
 
 std::string Socket::receive()
 {
@@ -115,6 +98,23 @@ std::string Socket::receive()
     delete[] buf;
     return msg;
 }
+
+// ssize_t socket::receive(char* buffer, size_t len)
+// {
+//     ssize_t byteReceived = recv(socketfd, buffer, len, 0);;
+//     return byteReceived
+// }
+// std::string socket::receive()
+// {
+//     char buffer[RW_SIZE];
+//     std::string answer;
+//     size_t byteRead = 0;
+//     while ((byteRead = read(socketFd, buffer, RW_SIZE)))
+//     {
+//         answer.append(buffer, byteRead);
+//     }
+//     return answer;
+// }
 
 void Socket::closeSocket()
 {

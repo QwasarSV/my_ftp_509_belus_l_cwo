@@ -1,5 +1,5 @@
-#ifndef MY_MAIN_LANG_PARAM_
-#define MY_MAIN_LANG_PARAM_
+#ifndef MY_MAIN_LANG_
+#define MY_MAIN_LANG_
 
 // #include <my_stack.hpp>
 

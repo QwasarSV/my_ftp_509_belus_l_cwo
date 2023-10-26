@@ -14,11 +14,13 @@
             SMNT <SP> <pathname> <CRLF>
             QUIT <CRLF>
             REIN <CRLF>
+
             PORT <SP> <host-port> <CRLF>
             PASV <CRLF>
             TYPE <SP> <type-code> <CRLF>
             STRU <SP> <structure-code> <CRLF>
             MODE <SP> <mode-code> <CRLF>
+
             RETR <SP> <pathname> <CRLF>
             STOR <SP> <pathname> <CRLF>
             STOU <CRLF>
@@ -69,6 +71,7 @@
 
 
 #define EXIT_INSTRUCTION        1
+#define NEXT_INSTRUCTION        0
 
 #define CHAR_SPACE              ' '
 #define CHAR_OPARENTHESIS       '('
@@ -95,8 +98,9 @@
 #define S_ACC_CWD               "CWD"
 #define S_ACC_CDUP              "CDUP"
 #define S_ACC_SMNT              "SMNT"
-#define S_ACC_REIN              "REIN"
 #define S_ACC_QUIT              "QUIT"
+#define S_ACC_REIN              "REIN"
+#define S_ACC_EXIT              "EXIT"
 
 
 // TRANSFERT PARAMETER COMMANDS

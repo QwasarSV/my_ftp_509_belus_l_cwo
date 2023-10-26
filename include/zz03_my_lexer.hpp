@@ -24,13 +24,15 @@ class Lexer : public Syntax
     public:
         Lexer() : inputPtr(&std::cin)
         {
-            funcPtrMap[S_CATEGORY_ACC] = &Lexer::createInstr_ACC;
-            funcPtrMap[S_CATEGORY_TPC] = &Lexer::createInstr_TPC;
-            funcPtrMap[S_CATEGORY_FSC] = &Lexer::createInstr_FSC;
+            funcPtrMap[S_CATEGORY_ACC]          = &Lexer::createInstr_ACC;
+            funcPtrMap[S_CATEGORY_TPC]          = &Lexer::createInstr_TPC;
+            funcPtrMap[S_CATEGORY_FSC]          = &Lexer::createInstr_FSC;
+            funcPtrMap[S_CATEGORY_CHARACTERS]   = &Lexer::doNothing;
         }
 
         int parseLine();
-            bool tokenize(std::string &str, const char& delimiter);
+        int parseCmd(std::string& cmd);
+            bool tokenize(std::string& str, const char& delimiter);
                 bool tokeniseFile(const std::string& token);
             void distributeTokens();
             void generateStandaloneToken(const std::string& token);
@@ -40,8 +42,10 @@ class Lexer : public Syntax
                         void createInstr_ACC(const std::string& token, InstrPair& pair);
                         void createInstr_TPC(const std::string& token, InstrPair& pair);
                         void createInstr_FSC(const std::string& token, InstrPair& pair);
-                        // void doNothing(const std::string& token, InstrPair& pair);
+                        void doNothing(const std::string& token, InstrPair& pair);
         // test method;
+
+
         void printVec();
         PairVec_t getInstrVec() const;
         void clear();

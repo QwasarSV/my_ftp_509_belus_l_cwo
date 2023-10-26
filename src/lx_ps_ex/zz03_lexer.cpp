@@ -105,6 +105,14 @@ int Lexer::parseLine()
     return 0;
 }
 
+
+int Lexer::parseCmd(std::string& cmd)
+{
+    tokenize(cmd, CHAR_SPACE);
+    distributeTokens();
+    return Parser::validateInstructions(instructions);
+}
+
 /*  createInstr
     input: string, empty pair instruction
         Create a keyword token with optinonal arguments (limited to two)
@@ -112,21 +120,8 @@ int Lexer::parseLine()
 */
 void Lexer::createInstr_FSC(const std::string& token, InstrPair& pair)
 {
-    // if (token == S_KEYWORD_PUSH)
-    // {
-    //     pair.first(token);
-    //     readyStatus = false;
-    // }
-    // else if (token == S_KEYWORD_ASSERT)
-    // {
-    //     pair.first(token);
-    //     readyStatus = false;
-    // }
-    // else
-    // {
-    //     pair.first(token);
-    //     readyStatus = true;
-    // }
+    pair.first(token);
+    readyStatus = true;
 }
 
 
@@ -137,9 +132,27 @@ void Lexer::createInstr_FSC(const std::string& token, InstrPair& pair)
 */
 void Lexer::createInstr_ACC(const std::string& token, InstrPair& pair)
 {
-    // ValPair_t valuePair;
-    // valuePair.first = token;
-    // pair.second(valuePair);
+    
+    if (token == S_ACC_CDUP)
+    {
+        pair.first(token);
+        readyStatus = true;
+    }
+    else if (token == S_ACC_REIN)
+    {
+        pair.first(token);
+        readyStatus = true;
+    }
+    else if (token == S_ACC_EXIT)
+    {
+        pair.first(token);
+        readyStatus = true;
+    }
+    else
+    {
+        pair.first(token);
+        readyStatus = false;
+    }
 }
 
 /*  createDigitInstr
@@ -149,8 +162,8 @@ void Lexer::createInstr_ACC(const std::string& token, InstrPair& pair)
 */
 void Lexer::createInstr_TPC(const std::string& token, InstrPair& pair)
 {
-    // pair.third(token);
-    // readyStatus = true;
+    pair.first(token);
+    readyStatus = true;
 }
 
  /*  doNothing
@@ -158,9 +171,9 @@ void Lexer::createInstr_TPC(const std::string& token, InstrPair& pair)
         Placeholder for characters tokens;
     output: nil;
 */
-// void Lexer::doNothing(const std::string& token, InstrPair& pair)
-// {
-// }
+void Lexer::doNothing(const std::string& token, InstrPair& pair)
+{
+}
 
  /*  createPair
     input: string, string, instruction
@@ -175,6 +188,7 @@ void Lexer::createPair(const std::string& instructionType, const std::string& to
     } 
     else
     {
+        std::cout << token << std::endl;
         throw LexerError("INVALID TOKEN CATEGORY\n");
     }
 }

@@ -10,7 +10,7 @@ class Socket
         int socketFd;
 
     public:
-        Socket() :socketFd(-1) {}
+        Socket(int socketFd = -1) : socketFd(socketFd) {}
 
         bool create();
         bool bind(unsigned short port);
@@ -19,6 +19,7 @@ class Socket
         bool connect(const std::string &serverIp = "127.0.0.1", unsigned short port = 0);
         ssize_t send(const std::string &msg);
         std::string receive();
+        
         void closeSocket();
         ~Socket()
         {
