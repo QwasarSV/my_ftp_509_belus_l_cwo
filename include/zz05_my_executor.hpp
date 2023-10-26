@@ -16,17 +16,17 @@ class Exec : public cmdFTP
 {
     private:
     // MyClass obj;
-        typedef void (cmdFTP::*FTPMethod)(void);
+        typedef std::string (cmdFTP::*FTPMethod)(void);
         std::unordered_map<std::string, FTPMethod> funcPtrMap;
 
     public:
         Exec()
         {
             // ACCESS CONTROL COMMANDS
-            funcPtrMap[S_ACC_USER]  = &cmdFTP::cmd_ACC_USER;
-            funcPtrMap[S_ACC_PASS]  = &cmdFTP::cmd_ACC_PASS;
+            // funcPtrMap[S_ACC_USER]  = &cmdFTP::cmd_ACC_USER;
+            // funcPtrMap[S_ACC_PASS]  = &cmdFTP::cmd_ACC_PASS;
             funcPtrMap[S_ACC_ACCT]  = &cmdFTP::cmd_ACC_ACCT;
-            funcPtrMap[S_ACC_CWD ]  = &cmdFTP::cmd_ACC_CWD ;
+            // funcPtrMap[S_ACC_CWD ]  = &cmdFTP::cmd_ACC_CWD ;
             funcPtrMap[S_ACC_CDUP]  = &cmdFTP::cmd_ACC_CDUP;
             funcPtrMap[S_ACC_SMNT]  = &cmdFTP::cmd_ACC_SMNT;
             // funcPtrMap[S_ACC_QUIT]  = &cmdFTP::cmd_ACC_QUIT;
@@ -63,12 +63,14 @@ class Exec : public cmdFTP
             funcPtrMap[S_FCS_NOOP]  = &cmdFTP::cmd_FCS_NOOP;
         }
     void execMethod(const std::string& methodName);
+    void execMethodFTP(std::string& resp, const std::string& methodName);
 };
 
 int launch(const PairVec_t& instructions);
+int launchFTP(std::string& resp, const PairVec_t& instructions);
 
 void handleFileInput(Lexer& lx, const std::string& token);
 void handleStandardInput(Lexer& lx);
-bool handleClientInput(Lexer& lx, std::string& cmd);
+bool handleClientInput(std::string& resp, Lexer& lx, std::string& cmd);
 
 #endif

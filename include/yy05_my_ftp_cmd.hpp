@@ -1,152 +1,154 @@
 #ifndef MY_FTP_CMD_
 #define MY_FTP_CMD_
 
-
+#include <my_filesystem.hpp>
 // #include <yy00_my_main_server.hpp>
 
 class cmdFTP
 {
     public:
     // ACCESS CONTROL COMMANDS
-    void cmd_ACC_USER()
+    std::string cmd_ACC_USER()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_ACC_PASS()
+    std::string cmd_ACC_PASS()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_ACC_ACCT()
+    std::string cmd_ACC_ACCT()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_ACC_CWD ()
+    std::string cmd_ACC_CWD ()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_ACC_CDUP()
+    std::string cmd_ACC_CDUP()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_ACC_SMNT()
+    std::string cmd_ACC_SMNT()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_ACC_QUIT()
+    std::string cmd_ACC_QUIT()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_ACC_REIN()
+    std::string cmd_ACC_REIN()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_ACC_EXIT()
+    std::string cmd_ACC_EXIT()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
 
 
     // TRANSFERT PARAMETER COMMANDS
-    void cmd_FPC_PORT()
+    std::string cmd_FPC_PORT()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_FPC_PASV()
+    std::string cmd_FPC_PASV()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_FPC_TYPE()
+    std::string cmd_FPC_TYPE()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_FPC_STRU()
+    std::string cmd_FPC_STRU()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_FPC_MODE()
+    std::string cmd_FPC_MODE()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
 
 
     // FTP SERVICE COMMANDS
-    void cmd_FCS_RETR()
+    std::string cmd_FCS_RETR()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }     
-    void cmd_FCS_STOR()
+    std::string cmd_FCS_STOR()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }     
-    void cmd_FCS_STOU()
+    std::string cmd_FCS_STOU()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }     
-    void cmd_FCS_APPE()
+    std::string cmd_FCS_APPE()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }     
-    void cmd_FCS_ALLO()
+    std::string cmd_FCS_ALLO()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }     
-    void cmd_FCS_REST()
+    std::string cmd_FCS_REST()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }     
-    void cmd_FCS_RFNR()
+    std::string cmd_FCS_RFNR()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }     
-    void cmd_FCS_RNTO()
+    std::string cmd_FCS_RNTO()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }     
-    void cmd_FCS_ABOR()
+    std::string cmd_FCS_ABOR()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }     
-    void cmd_FCS_DELE()
+    std::string cmd_FCS_DELE()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }     
-    void cmd_FCS_RMD()
+    std::string cmd_FCS_RMD()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }      
-    void cmd_FCS_MKD()
+    std::string cmd_FCS_MKD()
     {
+        std::string result = "PLACEHOLDER";
         std::cout << "PLACEHOLDER" << std::endl;
+        return result;
+    }
+    std::string cmd_FCS_PWD()
+    {
+        return dirtyPWD();
     }      
-    void cmd_FCS_PWD()
+    std::string cmd_FCS_LIST()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }      
-    void cmd_FCS_LIST()
+        return dirtyLS();
+    }
+    std::string cmd_FCS_NLST()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_FCS_NLST()
+    std::string cmd_FCS_SITE()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_FCS_SITE()
+    std::string cmd_FCS_SYST()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_FCS_SYST()
+    std::string cmd_FCS_STAT()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_FCS_STAT()
+    std::string cmd_FCS_HELP()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    void cmd_FCS_HELP()
-    {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }
-    void cmd_FCS_NOOP()
+    std::string cmd_FCS_NOOP()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }

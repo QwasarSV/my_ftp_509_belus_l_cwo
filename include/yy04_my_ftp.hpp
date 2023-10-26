@@ -7,7 +7,7 @@
 class MyFTP
 {
     private:
-        std::string answer;
+        std::string resp;
         bool stop = false;
     public:
         MyFTP(int clientSock = -1)
@@ -25,12 +25,12 @@ class MyFTP
                 std::cout << cmd << std::endl;
                 cmd.append(" EXIT");
                 cmd.append(" ;;");
-                stop = handleClientInput(lx, cmd);
+                stop = handleClientInput(resp, lx, cmd);
                 if (!stop)
                 {
                     // prepared answer in HandleClientINput
                     std::cout << "sending answer" << std::endl;
-                    connectionSocket.send("answer");
+                    connectionSocket.send(resp);
                 }
                 else
                 {

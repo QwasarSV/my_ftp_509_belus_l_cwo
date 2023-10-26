@@ -23,7 +23,7 @@ my_ftp FTP Server Project
 |   |   |-- 2.2.1 Accept incoming client connections ✓
 |   |   |-- 2.2.2 Design and implement a thread pool for handling multiple clients ✓
 |   |-- 2.3 FTP Command Handling
-|   |   |-- 2.3.1 Develop a command parser to detect FTP commands ✓50%
+|   |   |-- 2.3.1 Develop a command parser to detect FTP commands ✓75%
 |   |   |-- 2.3.2 Implement the "USER" and "PASS" commands for "Anonymous" authentication
 |   |   |-- 2.3.3 Set up data transfer commands using active and passive modes
 |   |-- 2.4 File and Directory Management
@@ -67,7 +67,7 @@ Days 6-8:
 - Implement Active and Passive Modes
 Days 9-10:
 - File and Directory Management ✓25%
-- Additional FTP Commands and Features
+- Additional FTP Commands and Features ✓25%
 Days 11-12:
 - Thorough Testing (Unit, Integration, Protocol Adherence)
 Days 13:
@@ -76,7 +76,6 @@ Day 14:
 - Compilation, Packaging, and Delivery
 
 ```
-
 
                                             -------------
                                             |/---------\|
