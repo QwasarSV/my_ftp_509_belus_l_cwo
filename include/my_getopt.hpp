@@ -1,12 +1,13 @@
 #ifndef MY_CPPGETOPT
 #define MY_CPPGETOPT
 
-#include <my_unistd.h>
+// #include <my_unistd.h>
 
-#include <vector>
-#include <string>
-#include <cstring>
-#include <my_libasm.h>
+// #include <vector>
+// #include <string>
+// #include <cstring>
+// #include <my_libasm.h>
+#include <main_header.hpp>
 
 
 #define VALID_ARG "-abcd"

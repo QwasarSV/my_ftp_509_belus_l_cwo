@@ -1,4 +1,6 @@
-#include <yy00_my_main_server.hpp>
+// #include <yy00_my_main_server.hpp>
+#include <main_header.hpp>
+
 
 unsigned short toUnsShort(int num)
 {
@@ -78,6 +80,8 @@ bool Socket::connect(const std::string &serverIp, unsigned short port)
 
 ssize_t Socket::send(const std::string &msg)
 {
+    std::cout << "socket fd is : " << socketFd << std::endl;
+
     int len = msg.length();
     ssize_t byteSent = 0;
     byteSent += ::send(socketFd, &len, sizeof(len), 0);

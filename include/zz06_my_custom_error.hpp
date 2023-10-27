@@ -1,7 +1,8 @@
 #ifndef MY_CUSTOM_ERROR_HEADER_
 #define MY_CUSTOM_ERROR_HEADER_
+#include <main_header.hpp>
 
-#include <zz00_my_main_lang.hpp>
+// #include <zz00_my_main_lang.hpp>
 
 /*  error classes:
         throw matching error_type 

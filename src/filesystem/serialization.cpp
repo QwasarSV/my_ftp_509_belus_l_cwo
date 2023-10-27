@@ -1,4 +1,6 @@
-#include <my_filesystem.hpp>
+// #include <my_filesystem.hpp>
+#include <main_header.hpp>
+
 
 unsigned int GetFileSize(std::string filename)
 {
@@ -19,25 +21,46 @@ std::filesystem::directory_entry getFileInfo()
 }
 
 
+// std::string Serialize(const std::filesystem::path& filePath)
+// {
+//     std::string outputFile;
+//     std::ofstream out(outputFile, std::ios::binary);
+//     std::ifstream in(filePath, std::ios::binary);
+
+//     if (!out || !in)
+//     {
+//         //big bad ? 
+//     }
+    
+//     out << filePath.string() << '\n';
+//     out << std::filesystem::file_size(filePath) << '\n';
+//     out << std::filesystem::last_write_time(filePath).time_since_epoch().count() << '\n';
+//     std::cout << "here" << std::endl;
+//     out << in.rdbuf();
+//     in.close();
+//     out.close();
+//     return outputFile;
+// }
 std::string Serialize(const std::filesystem::path& filePath)
 {
-    std::string outputFile;
-    std::ofstream out(outputFile, std::ios::binary);
+    std::stringstream ss;
     std::ifstream in(filePath, std::ios::binary);
 
-    if (!out || !in)
+    if (!in)
     {
-        //big bad ? 
+        // Handle error
+        return "";
     }
-
-    out << filePath.string() << '\n';
-    out << std::filesystem::file_size(filePath) << '\n';
-    out << std::filesystem::last_write_time(filePath).time_since_epoch().count() << '\n';
-    out << in.rdbuf();
+    
+    ss << filePath.string() << '\n';
+    ss << std::filesystem::file_size(filePath) << '\n';
+    ss << std::filesystem::last_write_time(filePath).time_since_epoch().count() << '\n';
+    ss << in.rdbuf();
     in.close();
-    out.close();
-    return outputFile;
+
+    return ss.str();
 }
+
 
 
 void deserialize(const std::string& inputFile, std::filesystem::path& filePath, std::uintmax_t& fileSize, std::filesystem::file_time_type& lastModTime, std::string& fileContent)

@@ -1,8 +1,9 @@
 #ifndef __MY_GETOPT_H_
 #define __MY_GETOPT_H_
 
-#include <stdlib.h>
-#include <my_libasm.h>
+// #include <stdlib.h>
+// #include <my_libasm.h>
+#include <main_header.hpp>
 
 #ifndef STRUCT_MY_GETOPT
 #define STRUCT_MY_GETOPT

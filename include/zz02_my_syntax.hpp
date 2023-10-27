@@ -1,7 +1,8 @@
 #ifndef MY_SYNTAX_HEADER_
 #define MY_SYNTAX_HEADER_
+#include <main_header.hpp>
 
-#include <zz00_my_main_lang.hpp>
+// #include <zz00_my_main_lang.hpp>
 
 /*
     Class Syntax

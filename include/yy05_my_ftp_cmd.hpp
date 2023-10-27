@@ -1,12 +1,16 @@
 #ifndef MY_FTP_CMD_
 #define MY_FTP_CMD_
 
-#include <my_filesystem.hpp>
-// #include <yy00_my_main_server.hpp>
+#include <main_header.hpp>
 
+// #include <my_filesystem.hpp>
 class cmdFTP
 {
+    // protected:
+    // Socket clientPI;
+
     public:
+    cmdFTP() {}
     // ACCESS CONTROL COMMANDS
     std::string cmd_ACC_USER()
     {
@@ -20,9 +24,9 @@ class cmdFTP
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    std::string cmd_ACC_CWD ()
+    std::string cmd_ACC_CWD (std::string token)
     {
-        std::cout << "PLACEHOLDER" << std::endl;
+        return dirtyCWD(token);
     }
     std::string cmd_ACC_CDUP()
     {
@@ -32,18 +36,18 @@ class cmdFTP
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    std::string cmd_ACC_QUIT()
-    {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }
+    // std::string cmd_ACC_QUIT()
+    // {
+    //     std::cout << "PLACEHOLDER" << std::endl;
+    // }
     std::string cmd_ACC_REIN()
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
-    std::string cmd_ACC_EXIT()
-    {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }
+    // std::string cmd_ACC_EXIT()
+    // {
+    //     std::cout << "PLACEHOLDER" << std::endl;
+    // }
 
 
     // TRANSFERT PARAMETER COMMANDS
@@ -70,10 +74,17 @@ class cmdFTP
 
 
     // FTP SERVICE COMMANDS
-    std::string cmd_FCS_RETR()
+    std::string cmd_FCS_RETR(std::string token)
     {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }     
+        
+        //send status code 150 to client//
+        //open connection passive or active
+        std::string result = Serialize(token);
+        // std::cout << result << std::endl;
+        return result;
+        //serialize and send to connection; 
+        //close and send status code 226 to client//
+    }
     std::string cmd_FCS_STOR()
     {
         std::cout << "PLACEHOLDER" << std::endl;
@@ -152,6 +163,7 @@ class cmdFTP
     {
         std::cout << "PLACEHOLDER" << std::endl;
     }
+    ~cmdFTP() {}
 };
 
 #endif

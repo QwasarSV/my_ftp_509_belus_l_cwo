@@ -1,9 +1,10 @@
 #ifndef MY_SOCKET_
 #define MY_SOCKET_
 
-#include <yy00_my_main_server.hpp>
+// #include <yy00_my_main_server.hpp>
+#include <main_header.hpp>
 
-
+#include <utility> 
 class Socket
 {
     private:
@@ -22,6 +23,37 @@ class Socket
         
         void closeSocket();
         ~Socket()
+        {
+            if (socketFd != -1)
+            {
+                closeSocket();
+            }
+        }
+};
+
+class SocketMov : public Socket
+{
+    private:
+        int socketFd;
+
+    public:
+        SocketMov(int fd) : Socket(fd) {}
+        SocketMov(SocketMov&& other) noexcept : socketFd(std::move(other.socketFd))
+        {
+            other.socketFd = -1;  // or some invalid value
+        }
+
+        SocketMov& operator=(SocketMov&& other) noexcept
+        {
+            if (this != &other) 
+            {
+                closeSocket();
+                socketFd = other.socketFd;
+                other.socketFd = -1;
+            }
+            return *this;
+        }
+        ~SocketMov()
         {
             if (socketFd != -1)
             {

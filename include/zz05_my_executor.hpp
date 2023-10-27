@@ -1,8 +1,9 @@
 #ifndef MY_EXECUTOR_HEADER_
 #define MY_EXECUTOR_HEADER_
+#include <main_header.hpp>
 
-#include <zz00_my_main_lang.hpp>
-#include "yy05_my_ftp_cmd.hpp"
+// #include <zz00_my_main_lang.hpp>
+// #include <yy05_my_ftp_cmd.hpp>
 
 /*
     class Exec
@@ -34,14 +35,14 @@ class Exec : public cmdFTP
             // funcPtrMap[S_ACC_EXIT]  = &cmdFTP::cmd_ACC_EXIT;
 
             // TRANSFERT PARAMETER COMMANDS
-            funcPtrMap[S_FPC_PORT] = &cmdFTP::cmd_FPC_PORT;
-            funcPtrMap[S_FPC_PASV] = &cmdFTP::cmd_FPC_PASV;
-            funcPtrMap[S_FPC_TYPE] = &cmdFTP::cmd_FPC_TYPE;
-            funcPtrMap[S_FPC_STRU] = &cmdFTP::cmd_FPC_STRU;
-            funcPtrMap[S_FPC_MODE] = &cmdFTP::cmd_FPC_MODE;
+            funcPtrMap[S_FPC_PORT]  = &cmdFTP::cmd_FPC_PORT;
+            funcPtrMap[S_FPC_PASV]  = &cmdFTP::cmd_FPC_PASV;
+            funcPtrMap[S_FPC_TYPE]  = &cmdFTP::cmd_FPC_TYPE;
+            funcPtrMap[S_FPC_STRU]  = &cmdFTP::cmd_FPC_STRU;
+            funcPtrMap[S_FPC_MODE]  = &cmdFTP::cmd_FPC_MODE;
 
             // FTP SERVICE COMMANDS
-            funcPtrMap[S_FCS_RETR]  = &cmdFTP::cmd_FCS_RETR;
+            // funcPtrMap[S_FCS_RETR]  = &cmdFTP::cmd_FCS_RETR;
             funcPtrMap[S_FCS_STOR]  = &cmdFTP::cmd_FCS_STOR;
             funcPtrMap[S_FCS_STOU]  = &cmdFTP::cmd_FCS_STOU;
             funcPtrMap[S_FCS_APPE]  = &cmdFTP::cmd_FCS_APPE;
@@ -67,10 +68,10 @@ class Exec : public cmdFTP
 };
 
 int launch(const PairVec_t& instructions);
-int launchFTP(std::string& resp, const PairVec_t& instructions);
+int launchFTP(std::string& resp, const PairVec_t& instructions, SocketMov&& clientPI);
 
 void handleFileInput(Lexer& lx, const std::string& token);
 void handleStandardInput(Lexer& lx);
-bool handleClientInput(std::string& resp, Lexer& lx, std::string& cmd);
+bool handleClientInput(std::string& resp, Lexer& lx, std::string& cmd, SocketMov&& clientPI);
 
 #endif

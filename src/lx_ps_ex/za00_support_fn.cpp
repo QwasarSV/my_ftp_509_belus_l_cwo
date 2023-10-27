@@ -1,4 +1,6 @@
-#include <zz00_my_main_lang.hpp>
+// #include <zz00_my_main_lang.hpp>
+#include <main_header.hpp>
+
 
 void rm_parenthesis(std::string& str)
 {

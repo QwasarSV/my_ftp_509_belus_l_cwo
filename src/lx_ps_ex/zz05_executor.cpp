@@ -1,4 +1,6 @@
-#include <zz00_my_main_lang.hpp>
+// #include <zz00_my_main_lang.hpp>
+#include <main_header.hpp>
+
 
 void handleFileInput(Lexer& lx, const std::string& token)
 {
@@ -8,7 +10,7 @@ void handleFileInput(Lexer& lx, const std::string& token)
     launch(instructions);
 }
 
-bool handleClientInput(std::string& resp, Lexer& lx, std::string& cmd)
+bool handleClientInput(std::string& resp, Lexer& lx, std::string& cmd, SocketMov&& clientPI)
 {
     bool result = false;
     try 
@@ -16,7 +18,7 @@ bool handleClientInput(std::string& resp, Lexer& lx, std::string& cmd)
         lx.parseCmd(cmd);
         // lx.printVec();
         PairVec_t instructions = lx.getInstrVec();
-        result = launchFTP(resp, instructions);
+        result = launchFTP(resp, instructions, std::move(clientPI));
         lx.clear();
     }
     catch (const std::exception& error)
@@ -73,7 +75,6 @@ void Exec::execMethod(const std::string& methodName)
 
 void Exec::execMethodFTP(std::string& resp, const std::string& methodName)
 {
-    std::cout << "method name: " << methodName << std::endl;
     if (funcPtrMap.find(methodName) != funcPtrMap.end())
     {
         resp = (this->*funcPtrMap[methodName])();
@@ -118,7 +119,7 @@ int launch(const PairVec_t& instructions)
     return EXIT_FAILURE;
 }
 
-int launchFTP(std::string& resp, const PairVec_t& instructions)
+int launchFTP(std::string& resp, const PairVec_t& instructions, SocketMov&& clientPI)
 {
     Exec ex;
     for (const TokPair_t instruction : instructions)
@@ -127,6 +128,18 @@ int launchFTP(std::string& resp, const PairVec_t& instructions)
         {
             const ValPair_t& value = instruction.second.value();
             // ex.method(value.first, value.second.value());
+        }
+        if (instruction.first == S_ACC_CWD)
+        {
+            const ValPair_t& value = instruction.second.value();
+            resp = ex.cmd_ACC_CWD(value.first);
+        }
+        if (instruction.first == S_FCS_RETR)
+        {
+            clientPI.send("150\n\n\n\r");
+
+            const ValPair_t& value = instruction.second.value();
+            resp = ex.cmd_FCS_RETR(value.first);
         }
         else if (instruction.first == S_ACC_QUIT)
         {
@@ -137,7 +150,6 @@ int launchFTP(std::string& resp, const PairVec_t& instructions)
         {
             return NEXT_INSTRUCTION;
         }
-
         else if (!instruction.first.empty())
         {
             ex.execMethodFTP(resp, instruction.first);

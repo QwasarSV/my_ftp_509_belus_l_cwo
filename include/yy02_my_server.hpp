@@ -1,7 +1,8 @@
 #ifndef MY_SERVER_
 #define MY_SERVER_
 
-#include <yy00_my_main_server.hpp>
+// #include <yy00_my_main_server.hpp>
+#include <main_header.hpp>
 
 unsigned short toUnsShort(int num);
 

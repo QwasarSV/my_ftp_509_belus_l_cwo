@@ -1,7 +1,8 @@
 #ifndef MY_LANG_PARAM_
 #define MY_LANG_PARAM_
+#include <main_header.hpp>
 
-#include <zz00_my_main_lang.hpp>
+// #include <zz00_my_main_lang.hpp>
 /*
 *SP = space
 *CRLF Carriage Return Line Feed
@@ -68,6 +69,7 @@
             <pathname> ::= <string>
             <decimal-integer> ::= any decimal integer
 */
+
 
 
 #define EXIT_INSTRUCTION        1
@@ -145,6 +147,9 @@
 #define S_DIGIT_8               "8"
 #define S_DIGIT_9               "9"
 
+#define VALID_PATTERN           "[\\w!@#\\$%^&*()_.]+"
+
+
 using SharedToken_t     = std::shared_ptr<std::string>;
 
 using TokVec_t          = std::vector<std::string>;
@@ -158,6 +163,7 @@ using SetVariant_t = std::variant<
     // std::unordered_set<char>,
     std::unordered_set<std::string>
 >;
+
 
 /*
     class InstrPair

@@ -1,4 +1,6 @@
-#include <zz00_my_main_lang.hpp>
+// #include <zz00_my_main_lang.hpp>
+#include <main_header.hpp>
+
 
 /* tokenize
     input: string, char
@@ -113,16 +115,7 @@ int Lexer::parseCmd(std::string& cmd)
     return Parser::validateInstructions(instructions);
 }
 
-/*  createInstr
-    input: string, empty pair instruction
-        Create a keyword token with optinonal arguments (limited to two)
-    output: nil;
-*/
-void Lexer::createInstr_FSC(const std::string& token, InstrPair& pair)
-{
-    pair.first(token);
-    readyStatus = true;
-}
+
 
 
 /*  createTypeInstr
@@ -152,8 +145,11 @@ void Lexer::createInstr_ACC(const std::string& token, InstrPair& pair)
     {
         pair.first(token);
         readyStatus = false;
+        acceptUserArg = true;
     }
 }
+
+
 
 /*  createDigitInstr
     input: string, empty pair instruction
@@ -163,6 +159,37 @@ void Lexer::createInstr_ACC(const std::string& token, InstrPair& pair)
 void Lexer::createInstr_TPC(const std::string& token, InstrPair& pair)
 {
     pair.first(token);
+    readyStatus = true;
+}
+
+
+/*  createInstr
+    input: string, empty pair instruction
+        Create a keyword token with optinonal arguments (limited to two)
+    output: nil;
+*/
+void Lexer::createInstr_FSC(const std::string& token, InstrPair& pair)
+{
+    if (token == S_FCS_RETR)
+    {
+        pair.first(token);
+        readyStatus = false;
+        acceptUserArg = true;
+    }
+    else
+    {
+        pair.first(token);
+        readyStatus = true;
+    }
+}
+
+
+void Lexer::storeUserArg(const std::string& token, InstrPair& pair)
+{
+    ValPair_t valuePair;
+    valuePair.first = token;
+    pair.second(valuePair);
+    acceptUserArg = false;
     readyStatus = true;
 }
 
@@ -216,6 +243,12 @@ bool Lexer::isValidToken(const std::string& token, const std::string& setName, c
     return match;
 }
 
+bool Lexer::isValidString(const std::string& str)
+{
+    std::regex pattern(VALID_PATTERN);
+    return std::regex_match(str, pattern);
+}
+
 
 /*  createPair
     input: string, string, empty instruction
@@ -225,10 +258,18 @@ bool Lexer::isValidToken(const std::string& token, const std::string& setName, c
 void Lexer::storeToken(const std::string& token, const std::string& setName,  InstrPair& pair)
 {
     std::shared_ptr<std::string> newToken = std::make_shared<std::string>(token.c_str());
-    auto it = categoryMap.find(setName);
-    createPair(it->first, token.c_str(), pair);
-    it->second.push_back(newToken);
-    tokens.pop_back();
+    
+    if (acceptUserArg == true)
+    {
+            storeUserArg(token.c_str(), pair);
+    }
+    else
+    {
+        auto it = categoryMap.find(setName);
+        createPair(it->first, token.c_str(), pair);
+        it->second.push_back(newToken);
+        tokens.pop_back();
+    }
 }
 
     // for (const auto& token : tokens)
@@ -258,6 +299,10 @@ void Lexer::distributeTokens()
         for (const auto& [setName, tokenSet] : tokenMap)
         {
             match = isValidToken(token, setName, tokenSet);
+            if (acceptUserArg == true)
+            {
+                match = isValidString(token);
+            }
             if (match)
             {
                 storeToken(token, setName, pair);
