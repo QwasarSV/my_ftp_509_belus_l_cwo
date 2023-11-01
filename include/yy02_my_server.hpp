@@ -39,7 +39,7 @@ class Server
             int clientSocket = serverSocket.accept();
             return clientSocket;
         }
-        
+
         std::string getServerInfo()
         {
             std::string result = serverSocket.LocalEndpointInfo();

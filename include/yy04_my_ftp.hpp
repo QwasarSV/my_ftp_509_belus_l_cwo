@@ -24,7 +24,7 @@ class MyFTP
             {
                 std::cerr << "Connection Failed" << std::endl;
             }
-            clientPI.send("220");
+            clientPI.send("220: Service ready for new user.");
             Lexer lx;
             while (!stop)
             {

@@ -3,6 +3,18 @@
 
 #include <main_header.hpp>
 // #include <my_filesystem.hpp>
+
+#define S_CS_150 "150 File status: ok\n\r"
+#define S_CS_200 "200: Command okay.\n\r"
+#define S_CS_220 "220: Service ready for new user.\r\n"
+#define S_CS_221 "221 Goodbye.\r\n"
+#define S_CS_207 "227EnteringPassiveMode("
+#define S_CS_226 "226 transfer complete\n\r"
+#define S_CS_230 "230: Anonymous access granted\n\r"
+#define S_CS_502 "502: Command not implemented.\n\r"
+#define S_CS_530 "530 Not logged in\n\r"
+#define S_CS_550 "550: File not found.\r\n"
+
 class cmdFTP
 {
     // protected:
@@ -10,56 +22,70 @@ class cmdFTP
 
     public:
     cmdFTP() {}
+
     // ACCESS CONTROL COMMANDS
     std::string cmd_ACC_USER(SocketMov&& clientPI, const std::string& token)
     {
         if (token == "Anonymous")
         {
-            clientPI.send("230 Anonymous access granted");
+            clientPI.send(S_CS_230);
         }
     }
-
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_ACC_PASS(SocketMov&& clientPI)
     {
-        clientPI.send("530 Not logged in");
+        clientPI.send(S_CS_530);
     }
-
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_ACC_ACCT()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
+        const std::string result = S_CS_502;
+        return result;
     }
-
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_ACC_CWD (const std::string& token)
     {
         return dirtyCWD(token);
     }
-
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_ACC_CDUP()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
+        const std::string result = S_CS_502;
+        return result;
     }
-
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_ACC_SMNT()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
+        const std::string result = S_CS_502;
+        return result;
     }
-
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     // std::string cmd_ACC_QUIT()
     // {
     //     std::cout << "PLACEHOLDER" << std::endl;
     // }
-
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_ACC_REIN()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
+        const std::string result = S_CS_502;
+        return result;
     }
-
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     // std::string cmd_ACC_EXIT()
     // {
     //     std::cout << "PLACEHOLDER" << std::endl;
     // }
-
-
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+    // TRANSFERT PARAMETER COMMANDS
     std::pair<std::string, int> parsePORTResponse(const std::string& response)
     {
         std::stringstream ss(response);
@@ -83,8 +109,6 @@ class cmdFTP
         return {ip, port};
     }
 
-
-    // TRANSFERT PARAMETER COMMANDS
     std::string cmd_TPC_PORT(SocketMov&& clientPI, std::string token)
     {
         clientPI.setActv();
@@ -92,20 +116,11 @@ class cmdFTP
         std::pair<std::string, int> fullAddress = parsePORTResponse(token);
         clientPI.setExpectedIp(fullAddress.first);
         clientPI.setExpectedPort(fullAddress.second);
-        std::string result = "200";
+        std::string result = S_CS_200;
         return result;
     }
-
-    // std::string createPortString(const std::string& port)
-    // {
-    //     int leftover_int = number % BYTE_MAX_PLUS_ONE;
-    //     int mult_int = std::floor(number / BYTE_MAX_PLUS_ONE);
-        
-    //     std::string leftover_str = std::to_string(leftover_int);
-    //     std::string mult_str = std::to_string(mult_int);
-    //     std::string result = leftover_str + "," + mult_str;
-    //     return result;
-    // }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 
     std::string cmd_TPC_PASV(SocketMov&& clientPI)
     {
@@ -113,155 +128,228 @@ class cmdFTP
         clientPI.socketDTP.create();
         clientPI.socketDTP.bind();
         std::string LocalIpPort = clientPI.socketDTP.LocalEndpointInfo();
-        std::string result = "227EnteringPassiveMode(" + LocalIpPort + ")\n\r";
+        std::string result = S_CS_207 + LocalIpPort + ")\n\r";
         std::cout << result << std::endl;
         return result;
     }
-
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_TPC_TYPE()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
+        const std::string result = S_CS_502;
+        return result;
     }
-
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_TPC_STRU()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
+        const std::string result = S_CS_502;
+        return result;
     }
-
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_TPC_MODE()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
+        const std::string result = S_CS_502;
+        return result;
+    }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+    // FTP SERVICE COMMANDS
+
+
+    bool fileExist(const std::string& token)
+    {
+        if (std::filesystem::exists(filePath))
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+    }
+
+    void actvTransfer(SocketMov&& clientPI, const std::string& token)
+    {
+        sleep(1);
+        Socket socketDTP;
+        socketDTP.create();
+        std::string ipAddress = clientPI.getExpectedIp();
+        int port = clientPI.getExpectedPort();
+        socketDTP.connect(ipAddress, port);
+        std::string file = prepareFile(token);
+        socketDTP.send(file);
+    }
+
+    void pasvTranfer(SocketMov&& clientPI, const std::string& token)
+    {
+        clientPI.socketDTP.listen();
+        int clientSocket = clientPI.socketDTP.accept();
+        Socket DTPserver(clientSocket);
+        std::string file = prepareFile(token);
+        DTPserver.send(file);
+        DTPserver.closeSocket();
     }
 
 
-    // FTP SERVICE COMMANDS
     std::string cmd_FCS_RETR(SocketMov&& clientPI, const std::string& token)
     {
-        clientPI.send("150 File status: ok\n\r");
-        if (!clientPI.getPasv() && !clientPI.GetActv())
+        if (fileExist(const std::string token))
         {
-            cmd_TPC_PASV(std::move(clientPI));
+            clientPI.send(S_CS_150);
+            if (!clientPI.getPasv() && !clientPI.GetActv())
+            {
+                cmd_TPC_PASV(std::move(clientPI));
+            }
+            else if (clientPI.getPasv())
+            {
+                pasvTranfer(std::move(clientPI), token);
+            }
+            else if (clientPI.GetActv())
+            {
+                actvTransfer(std::move(clientPI), token);
+            }
+            std::string result = S_CS_226;
         }
-        else if (clientPI.getPasv())
+        else 
         {
-            clientPI.socketDTP.listen();
-            int clientSocket = clientPI.socketDTP.accept();
-            Socket DTPserver(clientSocket);
-            std::string file = prepareFile(token);
-            DTPserver.send(file);
-            DTPserver.closeSocket();
+            std::string result = S_CS_550;
         }
-        else if (clientPI.GetActv())
-        {
-            sleep(1);
-            Socket socketDTP;
-            socketDTP.create();
-            // clientPI.socketDTP.create();
-            std::string ipAddress = clientPI.getExpectedIp();
-            int port = clientPI.getExpectedPort();
-            std::cout << "ipaddr |" << ipAddress <<"|"<< std::endl;
-            std::cout << "port " << port << std::endl;
-            socketDTP.connect(ipAddress, port);
-            // clientPI.socketDTP.connect("127.0.0.1", 12311);
-            std::string file = prepareFile(token);
-            socketDTP.send(file);
-        }
-        // std::string file = Serialize(token);
-        // clientPI.socketDTP.send(file);
-        // clientPI.socketDTP.closeSocket();
-        std::string result = "226 transfer complete\n\r";
         return result;
-        // return file;
     }
-
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_FCS_STOR()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }
-   
-    std::string cmd_FCS_STOU()
-    {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }
- 
-    std::string cmd_FCS_APPE()
-    {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }
-
-    std::string cmd_FCS_ALLO()
-    {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }
-   
-    std::string cmd_FCS_REST()
-    {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }
-  
-    std::string cmd_FCS_RFNR()
-    {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }
-  
-    std::string cmd_FCS_RNTO()
-    {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }
- 
-    std::string cmd_FCS_ABOR()
-    {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }
-  
-    std::string cmd_FCS_DELE()
-    {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }
-
-    std::string cmd_FCS_RMD()
-    {
-        std::cout << "PLACEHOLDER" << std::endl;
-    }
-
-    std::string cmd_FCS_MKD()
-    {
-        std::string result = "PLACEHOLDER";
-        std::cout << "PLACEHOLDER" << std::endl;
+        const std::string result = S_CS_502;
         return result;
     }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+    std::string cmd_FCS_STOU()
+    {
+        const std::string result = S_CS_502;
+        return result;
+    }
+//---------------------------------------------------------------------
+//--------------------------------------------------------------------- 
+    std::string cmd_FCS_APPE()
+    {
+        const std::string result = S_CS_502;
+        return result;
+    }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+    std::string cmd_FCS_ALLO()
+    {
+        const std::string result = S_CS_502;
+        return result;
+    }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+    std::string cmd_FCS_REST()
+    {
+        const std::string result = S_CS_502;
+        return result;
+    }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+    std::string cmd_FCS_RFNR()
+    {
+        const std::string result = S_CS_502;
+        return result;
+    }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+    std::string cmd_FCS_RNTO()
+    {
+        const std::string result = S_CS_502;
+        return result;
+    }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+    std::string cmd_FCS_ABOR()
+    {
+        const std::string result = S_CS_502;
+        return result;
+    }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+    std::string cmd_FCS_DELE()
+    {
+        const std::string result = S_CS_502;
+        return result;
+    }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+    std::string cmd_FCS_RMD()
+    {
+        const std::string result = S_CS_502;
+        return result;
+    }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+    std::string cmd_FCS_MKD()
+    {
+        const std::string result = S_CS_502;
+        return result;
+    }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_FCS_PWD()
     {
         return dirtyPWD();
-    }      
+    }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_FCS_LIST()
     {
         return dirtyLS();
     }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_FCS_NLST()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
+        const std::string result = S_CS_502;
+        return result;
     }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_FCS_SITE()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
+        const std::string result = S_CS_502;
+        return result;
     }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_FCS_SYST()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
+        const std::string result = S_CS_502;
+        return result;
     }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_FCS_STAT()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
+        const std::string result = S_CS_502;
+        return result;
     }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_FCS_HELP()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
+        const std::string result = S_CS_502;
+        return result;
     }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     std::string cmd_FCS_NOOP()
     {
-        std::cout << "PLACEHOLDER" << std::endl;
+        const std::string result = S_CS_502;
+        return result;
     }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
     ~cmdFTP() {}
 };
 
