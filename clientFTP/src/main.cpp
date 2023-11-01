@@ -56,46 +56,6 @@ int setDTP_PORT(const std::string& token)
     return value;
 }
 
-// void deserialize(const std::string& inputFile, std::filesystem::path& filePath, std::uintmax_t& fileSize, std::filesystem::file_time_type& lastModTime, std::string& fileContent)
-// {
-//     std::ifstream in(inputFile, std::ios::binary);
-//     if (!in)
-//     {
-//         std::cerr << "Failed to open input file for deserialization." << std::endl;
-//         return;
-//     }
-
-//     // Read metadata
-//     std::string pathStr;
-//     std::getline(in, pathStr);
-//     filePath = pathStr;   // Assign string to path
-//     in >> fileSize;
-//     in.ignore(); // skip '\n'
-//     std::int64_t timeCount;
-//     in >> timeCount;
-//     in.ignore(); // skip '\n'
-//     lastModTime = std::filesystem::file_time_type(std::chrono::duration_cast<std::filesystem::file_time_type::duration>(std::chrono::nanoseconds(timeCount)));
-
-//     // Read actual file content
-//     fileContent.assign((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-
-//     in.close();
-// }
-
-// void deserialize(std::istream& is, std::filesystem::path& fileName, std::filesystem::path& filePath, std::uintmax_t& fileSize, std::filesystem::file_time_type& lastModTime, std::string& fileContent) {
-//     // Read metadata
-//     std::getline(is, fileName);
-//     std::getline(is, filePath);
-//     is >> fileSize;
-//     is.ignore();
-//     std::int64_t timeCount;
-//     is >> timeCount;
-//     is.ignore();
-//     lastModTime = std::filesystem::file_time_type(std::chrono::duration_cast<std::filesystem::file_time_type::duration>(std::chrono::nanoseconds(timeCount)));
-
-//     // Read actual file content
-//     fileContent.assign((std::istreambuf_iterator<char>(is)), std::istreambuf_iterator<char>());
-// }
 
 void deserialize(std::istream& is, std::filesystem::path& fileName, std::filesystem::path& filePath, std::uintmax_t& fileSize, std::filesystem::file_time_type& lastModTime, std::string& fileContent) {
     // Temporary strings to store path values
@@ -199,6 +159,7 @@ int main()
                             line.clear();
                             resp = clientDTP.receiveFrom();
                             std::cout << resp << std::endl;
+                            recoverFile(resp);
                             resp.clear();
                             resp = client.receiveFrom();
                             std::cout << resp << std::endl;
