@@ -35,11 +35,11 @@ class Exec : public cmdFTP
             // funcPtrMap[S_ACC_EXIT]  = &cmdFTP::cmd_ACC_EXIT;
 
             // TRANSFERT PARAMETER COMMANDS
-            funcPtrMap[S_FPC_PORT]  = &cmdFTP::cmd_FPC_PORT;
-            funcPtrMap[S_FPC_PASV]  = &cmdFTP::cmd_FPC_PASV;
-            funcPtrMap[S_FPC_TYPE]  = &cmdFTP::cmd_FPC_TYPE;
-            funcPtrMap[S_FPC_STRU]  = &cmdFTP::cmd_FPC_STRU;
-            funcPtrMap[S_FPC_MODE]  = &cmdFTP::cmd_FPC_MODE;
+            // funcPtrMap[S_TPC_PORT]  = &cmdFTP::cmd_TPC_PORT;
+            // funcPtrMap[S_TPC_PASV]  = &cmdFTP::cmd_TPC_PASV;
+            funcPtrMap[S_TPC_TYPE]  = &cmdFTP::cmd_TPC_TYPE;
+            funcPtrMap[S_TPC_STRU]  = &cmdFTP::cmd_TPC_STRU;
+            funcPtrMap[S_TPC_MODE]  = &cmdFTP::cmd_TPC_MODE;
 
             // FTP SERVICE COMMANDS
             // funcPtrMap[S_FCS_RETR]  = &cmdFTP::cmd_FCS_RETR;

@@ -29,6 +29,7 @@ class Lexer : public Syntax
             funcPtrMap[S_CATEGORY_ACC]          = &Lexer::createInstr_ACC;
             funcPtrMap[S_CATEGORY_TPC]          = &Lexer::createInstr_TPC;
             funcPtrMap[S_CATEGORY_FSC]          = &Lexer::createInstr_FSC;
+            funcPtrMap[S_CATEGORY_DIGITS]       = &Lexer::createDigitInstr;
             funcPtrMap[S_CATEGORY_CHARACTERS]   = &Lexer::doNothing;
         }
 
@@ -45,10 +46,10 @@ class Lexer : public Syntax
                         void createInstr_ACC(const std::string& token, InstrPair& pair);
                         void createInstr_TPC(const std::string& token, InstrPair& pair);
                         void createInstr_FSC(const std::string& token, InstrPair& pair);
+                        void createDigitInstr(const std::string& token, InstrPair& pair);
                         void storeUserArg(const std::string& token, InstrPair& pair);
                         void doNothing(const std::string& token, InstrPair& pair);
         // test method;
-
 
         void printVec();
         PairVec_t getInstrVec() const;

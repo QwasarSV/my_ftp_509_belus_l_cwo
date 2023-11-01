@@ -3,8 +3,8 @@
 
 
 
-void ftpTask(int clientSocket)
+void ftpTask(int clientSocket,  const std::string& DTP_IpAddress)
 {
     
-    MyFTP task(clientSocket);
+    MyFTP task(clientSocket, DTP_IpAddress);
 }

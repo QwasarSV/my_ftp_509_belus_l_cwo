@@ -2,6 +2,9 @@
 #define MY_MAIN_SERVER
 
 
+#include <cmath>
+#include <algorithm>
+
 #include <string.h>
 #include <unistd.h>
 
@@ -17,6 +20,9 @@
 #include <yy02_my_server.hpp>
 #include <yy03_my_client.hpp>
 // #include <yy04_my_ftp.hpp>
+
+
+
 
 #define RW_SIZE 512
 

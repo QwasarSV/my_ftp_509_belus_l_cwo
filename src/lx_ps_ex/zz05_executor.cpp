@@ -13,13 +13,22 @@ void handleFileInput(Lexer& lx, const std::string& token)
 bool handleClientInput(std::string& resp, Lexer& lx, std::string& cmd, SocketMov&& clientPI)
 {
     bool result = false;
-    try 
+    try
     {
-        lx.parseCmd(cmd);
+        if (lx.parseCmd(cmd))
+        {
+            resp = "500: Syntax error, command unrecognized.";
+            result = false;
+            lx.clear();
+            return false;
+        }
+        else
+        {
+            PairVec_t instructions = lx.getInstrVec();
+            result = launchFTP(resp, instructions, std::move(clientPI));
+            lx.clear();
+        }
         // lx.printVec();
-        PairVec_t instructions = lx.getInstrVec();
-        result = launchFTP(resp, instructions, std::move(clientPI));
-        lx.clear();
     }
     catch (const std::exception& error)
     {
@@ -127,19 +136,26 @@ int launchFTP(std::string& resp, const PairVec_t& instructions, SocketMov&& clie
         if (instruction.first == S_ACC_USER)
         {
             const ValPair_t& value = instruction.second.value();
-            // ex.method(value.first, value.second.value());
+            ex.cmd_ACC_USER(std::move(clientPI), value.first);
         }
-        if (instruction.first == S_ACC_CWD)
+        else if (instruction.first == S_TPC_PASV)
+        {
+            resp = ex.cmd_TPC_PASV(std::move(clientPI));
+        }
+        else if (instruction.first == S_TPC_PORT)
+        {
+            const ValPair_t& value = instruction.second.value();
+            resp = ex.cmd_TPC_PORT(std::move(clientPI), value.first);
+        }
+        else if (instruction.first == S_ACC_CWD)
         {
             const ValPair_t& value = instruction.second.value();
             resp = ex.cmd_ACC_CWD(value.first);
         }
-        if (instruction.first == S_FCS_RETR)
+        else if (instruction.first == S_FCS_RETR)
         {
-            clientPI.send("150\n\n\n\r");
-
             const ValPair_t& value = instruction.second.value();
-            resp = ex.cmd_FCS_RETR(value.first);
+            resp = ex.cmd_FCS_RETR(std::move(clientPI), value.first);
         }
         else if (instruction.first == S_ACC_QUIT)
         {
@@ -156,7 +172,7 @@ int launchFTP(std::string& resp, const PairVec_t& instructions, SocketMov&& clie
         }
         else
         {
-            // ex.clear();
+            resp = "404 EMPTY INSTRUCTION";
             return EXIT_FAILURE;
         }
     }

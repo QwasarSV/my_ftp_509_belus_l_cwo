@@ -103,8 +103,7 @@ int Lexer::parseLine()
         std::cout << "EOF (Ctrl+D) detected." << std::endl;
         generateStandaloneToken(S_CHARACTERS_ENDINSTR);
     }
-    // return Parser::validateInstructions(instructions);
-    return 0;
+    return Parser::validateInstructions(instructions);
 }
 
 
@@ -118,7 +117,7 @@ int Lexer::parseCmd(std::string& cmd)
 
 
 
-/*  createTypeInstr
+/*  createInstr_ACC
     input: string, empty pair instruction
         Create a type token
     output: nil;
@@ -151,19 +150,28 @@ void Lexer::createInstr_ACC(const std::string& token, InstrPair& pair)
 
 
 
-/*  createDigitInstr
+/*  createInstr_TPC
     input: string, empty pair instruction
-        Create a digits token
+        Create a keyword token with optinonal arguments (limited to two)
     output: nil;
 */
 void Lexer::createInstr_TPC(const std::string& token, InstrPair& pair)
 {
-    pair.first(token);
-    readyStatus = true;
+    if (token == S_TPC_PORT)
+    {
+        pair.first(token);
+        readyStatus = false;
+        acceptUserArg = true;
+    } 
+    else
+    {
+        pair.first(token);
+        readyStatus = true;
+    }
 }
 
 
-/*  createInstr
+/*  createInstr_FSC
     input: string, empty pair instruction
         Create a keyword token with optinonal arguments (limited to two)
     output: nil;
@@ -183,6 +191,14 @@ void Lexer::createInstr_FSC(const std::string& token, InstrPair& pair)
     }
 }
 
+
+void Lexer::createDigitInstr(const std::string& token, InstrPair& pair)
+{
+    ValPair_t valuePair;
+    valuePair.first = token;
+    pair.second(valuePair);
+    readyStatus = true;
+}
 
 void Lexer::storeUserArg(const std::string& token, InstrPair& pair)
 {
@@ -215,7 +231,6 @@ void Lexer::createPair(const std::string& instructionType, const std::string& to
     } 
     else
     {
-        std::cout << token << std::endl;
         throw LexerError("INVALID TOKEN CATEGORY\n");
     }
 }

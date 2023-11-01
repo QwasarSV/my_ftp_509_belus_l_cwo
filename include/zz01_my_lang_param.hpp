@@ -106,11 +106,11 @@
 
 
 // TRANSFERT PARAMETER COMMANDS
-#define S_FPC_PORT              "PORT"
-#define S_FPC_PASV              "PASV"
-#define S_FPC_TYPE              "TYPE"
-#define S_FPC_STRU              "STRU"
-#define S_FPC_MODE              "MODE"
+#define S_TPC_PORT              "PORT"
+#define S_TPC_PASV              "PASV"
+#define S_TPC_TYPE              "TYPE"
+#define S_TPC_STRU              "STRU"
+#define S_TPC_MODE              "MODE"
 
 
 // FTP SERVICE COMMANDS
@@ -147,7 +147,7 @@
 #define S_DIGIT_8               "8"
 #define S_DIGIT_9               "9"
 
-#define VALID_PATTERN           "[\\w!@#\\$%^&*()_.]+"
+#define VALID_PATTERN           "[\\w!@#\\$%^&*()_.,]+"
 
 
 using SharedToken_t     = std::shared_ptr<std::string>;

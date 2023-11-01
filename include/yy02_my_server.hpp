@@ -9,24 +9,24 @@ unsigned short toUnsShort(int num);
 class Server
 {
     protected:
-        Socket ServerSocket;
+        Socket serverSocket;
 
     public:
         Server() {}
 
-        bool start(int port)
+        bool start(int port = 0)
         {
-            if (!ServerSocket.create()) 
+            if (!serverSocket.create()) 
             {
                 // error
                 return false;
             }
-            if (!ServerSocket.bind(port)) 
+            if (!serverSocket.bind(port)) 
             {
                 // error
                 return false;
             }
-            if (!ServerSocket.listen()) 
+            if (!serverSocket.listen()) 
             {
                 // error
                 return false;
@@ -36,14 +36,21 @@ class Server
 
         int waitClientReq()
         {
-            int clientSocket = ServerSocket.accept();
+            int clientSocket = serverSocket.accept();
             return clientSocket;
         }
+        
+        std::string getServerInfo()
+        {
+            std::string result = serverSocket.LocalEndpointInfo();
+            return result;
+        }
+
         ~Server() {}
 };
 
 // void printTask(int number);
-void ftpTask(int clientSocket);
+void ftpTask(int clientSocket, const std::string& DTP_IpAddress);
 
 class ServerTop : public Server
 {
@@ -53,19 +60,19 @@ class ServerTop : public Server
     public:
         ServerTop(unsigned int nbThread) : ThreadPool(nbThread) {}
 
-        bool start(int port)
+        bool start(int port, const std::string& DTP_IpAddress)
         {
-            if (!ServerSocket.create()) 
+            if (!serverSocket.create()) 
             {
                 // error
                 return false;
             }
-            if (!ServerSocket.bind(port)) 
+            if (!serverSocket.bind(port)) 
             {
                 // error
                 return false;
             }
-            if (!ServerSocket.listen()) 
+            if (!serverSocket.listen()) 
             {
                 // error
                 return false;
@@ -73,9 +80,9 @@ class ServerTop : public Server
 
             while (true) 
             {
-                int clientSocket = ServerSocket.accept();
+                int clientSocket = serverSocket.accept();
                 std::cout << "Incoming client connected" << std::endl;
-                ThreadPool.enqueue([clientSocket]() { ftpTask(clientSocket); });
+                ThreadPool.enqueue([clientSocket, DTP_IpAddress]() { ftpTask(clientSocket, DTP_IpAddress); });
             }
 
             return true;

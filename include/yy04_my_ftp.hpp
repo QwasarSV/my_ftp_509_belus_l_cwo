@@ -11,19 +11,20 @@ extern  bool handleClientInput(std::string& resp, Lexer& lx, std::string& cmd, S
 class MyFTP
 {
     private:
-        
         std::string resp;
         bool stop = false;
+
     public:
-    SocketMov clientPI;
-        MyFTP(int clientSock = -1) : clientPI(SocketMov(clientSock))
+        SocketMov clientPI;
+        std::string DTP_IpAddress;
+        MyFTP(int clientSock = -1, const std::string& DTP_server = "") : clientPI(SocketMov(clientSock))
         {
+            clientPI.socketDTP.setExpectedIP(DTP_server);
             if (clientSock == -1)
             {
                 std::cerr << "Connection Failed" << std::endl;
             }
-            // Socket connectionSocket(clientSock);
-            clientPI.send("42069");
+            clientPI.send("220");
             Lexer lx;
             while (!stop)
             {
@@ -34,9 +35,7 @@ class MyFTP
                 stop = handleClientInput(resp, lx, cmd, std::move(clientPI));
                 if (!stop)
                 {
-                    // prepared answer in HandleClientINput
                     std::cout << "sending answer" << std::endl;
-                    // std::cout << resp << std::endl;
                     clientPI.send(resp);
                     resp.clear();
                 }

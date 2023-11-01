@@ -23,7 +23,7 @@
 // #include <yy05_my_ftp_cmd.hpp>
 
 #define RW_SIZE 512
-
+#define BYTE_MAX_PLUS_ONE 256
 
 
 

@@ -26,6 +26,8 @@
 #include <cstring>
 #include <regex>
 
+#include <cmath>
+
 #include <vector>
 #include <queue>
 #include <unordered_set>

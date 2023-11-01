@@ -59,12 +59,7 @@ int main(int argc, char** argv)
 
 
     ServerTop server(2);
-    server.start(8080);
-    
-
-
-    
-
+    server.start(8080, "127.0.0.1");
 
     // const int PORT = 8080;
     // const std::string HOST = "127.0.0.1";

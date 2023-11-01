@@ -51,7 +51,7 @@ std::string Serialize(const std::filesystem::path& filePath)
         // Handle error
         return "";
     }
-    
+
     ss << filePath.string() << '\n';
     ss << std::filesystem::file_size(filePath) << '\n';
     ss << std::filesystem::last_write_time(filePath).time_since_epoch().count() << '\n';

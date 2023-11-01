@@ -10,6 +10,11 @@
 #include <sstream>
 #include <fstream>
 
+#include <cmath>
+#include <algorithm>
+
+#define BYTE_MAX_PLUS_ONE 256
+
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 

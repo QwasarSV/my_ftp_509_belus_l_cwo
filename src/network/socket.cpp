@@ -75,6 +75,7 @@ bool Socket::connect(const std::string &serverIp, unsigned short port)
         // error big bad ?
         return false;
     }
+    std::cout << "connection established" << std::endl;
     return true;
 }
 

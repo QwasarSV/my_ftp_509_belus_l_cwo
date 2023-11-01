@@ -43,17 +43,16 @@ class Syntax
             S_ACC_QUIT,
             S_ACC_REIN,
             S_ACC_EXIT
-            
         };
 
 
         inline static const std::unordered_set<std::string> TransfertParameterCommands =
         { 
-            S_FPC_PORT,
-            S_FPC_PASV,
-            S_FPC_TYPE,
-            S_FPC_STRU,
-            S_FPC_MODE
+            S_TPC_PORT,
+            S_TPC_PASV,
+            S_TPC_TYPE,
+            S_TPC_STRU,
+            S_TPC_MODE
         };
 
 

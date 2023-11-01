@@ -48,6 +48,10 @@ int Parser::validateInstructions(const PairVec_t& instrVec)
 {
     bool isLast = false;
     const TokPair_t* lastInstr = &instrVec.back();
+    if (instrVec.front().first == S_ACC_EXIT)
+    {
+        return EXIT_FAILURE;
+    }
     for (const TokPair_t& instr : instrVec)
     {
         if (!isValidInstr(instr))

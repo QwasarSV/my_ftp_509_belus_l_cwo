@@ -33,6 +33,20 @@ bool Socket::bind(unsigned short port)
     return false;
 }
 
+bool Socket::bindWithIp(const std::string &ipAddress, unsigned short port)
+{
+    struct sockaddr_in servInfo;
+    servInfo.sin_family = AF_INET;
+    servInfo.sin_port = htons(port);
+    servInfo.sin_addr.s_addr = inet_addr(ipAddress.c_str());
+    memset(servInfo.sin_zero, 0, sizeof(servInfo.sin_zero));
+    if (::bind(socketFd, (struct sockaddr*)&servInfo, sizeof(servInfo)) != -1)
+    {
+        return true; 
+    }
+    return false;
+}
+
 bool Socket::listen()
 {
     if (::listen(socketFd, 1) == -1)
