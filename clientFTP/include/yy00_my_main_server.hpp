@@ -19,14 +19,8 @@
 #include <yy01_my_socket.hpp>
 #include <yy02_my_server.hpp>
 #include <yy03_my_client.hpp>
-// #include <yy04_my_ftp.hpp>
-
-
-
+#include <yy04_my_clientFTP.hpp>
 
 #define RW_SIZE 512
-
-
-
 
 #endif

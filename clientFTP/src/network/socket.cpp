@@ -105,7 +105,6 @@ std::string Socket::receive()
 {
     int len = 0;
     recv(socketFd, &len, sizeof(len), 0);
-    // Allocate buffer and receive the actual message
     char* buf = new char[len];
     recv(socketFd, buf, len, 0);
     std::string msg(buf, len);
@@ -113,52 +112,68 @@ std::string Socket::receive()
     return msg;
 }
 
-// ssize_t socket::receive(char* buffer, size_t len)
-// {
-//     ssize_t byteReceived = recv(socketfd, buffer, len, 0);;
-//     return byteReceived
-// }
-// std::string socket::receive()
-// {
-//     char buffer[RW_SIZE];
-//     std::string answer;
-//     size_t byteRead = 0;
-//     while ((byteRead = read(socketFd, buffer, RW_SIZE)))
-//     {
-//         answer.append(buffer, byteRead);
-//     }
-//     return answer;
-// }
+void Socket::setExpectedIP(std::string str)
+{
+    ExpectedIP = str;
+}
+
+std::string Socket::createPortString(int local_port)
+{
+    int leftover_int = local_port % BYTE_MAX_PLUS_ONE;
+    int mult_int = std::floor(local_port / BYTE_MAX_PLUS_ONE);
+    std::string leftover_str = std::to_string(leftover_int);
+    std::string mult_str = std::to_string(mult_int);
+    std::string result = mult_str + "," + leftover_str ;
+    return result;
+}
+
+std::string Socket::LocalEndpointInfo()
+{
+    struct sockaddr_in local_address;
+    socklen_t addr_length = sizeof(local_address);
+    if (getsockname(socketFd, (struct sockaddr*)&local_address, &addr_length) == -1)
+    {
+        //  big bad
+    }
+    else
+    {
+        char* local_ip = inet_ntoa(local_address.sin_addr);
+        int local_port = ntohs(local_address.sin_port);
+        std::string IpAddress = local_ip;
+        if (IpAddress == "0.0.0.0")
+        {
+            IpAddress = ExpectedIP;
+        }
+        std::replace(IpAddress.begin(), IpAddress.end(), '.', ','); 
+        std::string localPort = createPortString(local_port);
+        std::string result = IpAddress + "," + localPort;
+        return result;
+    }
+    std::string result = "";
+    return result;
+}
+
+std::string Socket::RemoteEndpointInfo()
+{
+    struct sockaddr_in remote_address;
+    socklen_t addr_length = sizeof(remote_address);
+    if (getpeername(socketFd, (struct sockaddr*)&remote_address, &addr_length) == -1)
+    {
+        // big bad
+    } 
+    else
+    {
+        char* remote_ip = inet_ntoa(remote_address.sin_addr);
+        std::string IpAddress = remote_ip;
+        return IpAddress;
+    }
+    std::string result = "";
+    return result;
+}
+
+
 
 void Socket::closeSocket()
 {
     close(socketFd);
 }
-
-
-// std::string Socket::ReceiveMessage()
-// {
-//     char buffer[RW_SIZE];
-//     std::string answer;
-//     size_t byteRead = 0;
-//     while ((byteRead = read(socketFd, buffer, RW_SIZE)))
-//     {
-//         answer.append(buffer, byteRead);
-//     }
-//     return answer;
-// }
-
-// void Socket::writeMessage(const std::string& message)
-// {
-//     ssize_t byteSent = send(socketFd, message.c_str(), message.length(), 0);
-//     if (byteSent == -1)
-//     {
-//          // error big bad ? 
-//     }
-// }
-
-// int Socket::getSocket() const
-// {
-//     return socketFd;
-// }
-

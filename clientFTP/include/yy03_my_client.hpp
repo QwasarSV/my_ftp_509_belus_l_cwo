@@ -8,7 +8,7 @@ unsigned short toUnsShort(int num);
 class Client
 {
     private:
-        Socket clientSocket;
+        Socket   clientSocket;
 
     public:
         Client() {}
