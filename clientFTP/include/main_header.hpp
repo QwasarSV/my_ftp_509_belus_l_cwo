@@ -9,9 +9,10 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-
+#include <string>
 #include <cmath>
 #include <algorithm>
+#include <filesystem>
 
 #define BYTE_MAX_PLUS_ONE 256
 

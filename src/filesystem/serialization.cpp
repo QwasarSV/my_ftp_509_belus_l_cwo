@@ -41,26 +41,75 @@ std::filesystem::directory_entry getFileInfo()
 //     out.close();
 //     return outputFile;
 // }
-std::string Serialize(const std::filesystem::path& filePath)
-{
-    std::stringstream ss;
-    std::ifstream in(filePath, std::ios::binary);
+// std::string Serialize(const std::filesystem::path& filePath)
+// {
+//     std::stringstream ss;
+//     std::ifstream in(filePath, std::ios::binary);
 
+//     if (!in)
+//     {
+//         // Handle error
+//         return "";
+//     }
+    
+//     ss << filePath.string() << '\n';
+//     ss << std::filesystem::file_size(filePath) << '\n';
+//     ss << std::filesystem::last_write_time(filePath).time_since_epoch().count() << '\n';
+//     ss << in.rdbuf();
+//     in.close();
+
+//     return ss.str();
+// }
+
+// void serialize(const std::filesystem::path& filePath, std::ostream& os)
+// {
+//     std::ifstream in(filePath, std::ios::binary);
+//     if (!in) {
+//         std::cerr << "Failed to open file for serialization." << std::endl;
+//         return;
+//     }
+
+//     // Write metadata
+//     os << filePath.filename().string() << '\n';
+//     os << filePath.string() << '\n';
+//     os << std::filesystem::file_size(filePath) << '\n';
+//     os << std::filesystem::last_write_time(filePath).time_since_epoch().count() << '\n';
+
+//     // Write actual file content
+//     os << in.rdbuf();
+
+//     in.close();
+// }
+
+
+void serialize(const std::filesystem::path& filePath, std::ostream& os)
+{
+    std::ifstream in(filePath, std::ios::binary);
     if (!in)
     {
-        // Handle error
-        return "";
+        std::cerr << "Failed to open file for serialization." << std::endl;
+        return;
     }
 
-    ss << filePath.string() << '\n';
-    ss << std::filesystem::file_size(filePath) << '\n';
-    ss << std::filesystem::last_write_time(filePath).time_since_epoch().count() << '\n';
-    ss << in.rdbuf();
-    in.close();
+    // Write metadata
+    os << filePath.filename().string() << '\n';
+    os << filePath.string() << '\n';
+    os << std::filesystem::file_size(filePath) << '\n';
+    os << std::filesystem::last_write_time(filePath).time_since_epoch().count() << '\n';
 
-    return ss.str();
+    // Write actual file content
+    os << in.rdbuf();
+
+    in.close();
 }
 
+std::string prepareFile(const std::string FilePath)
+{
+    std::stringstream socketStream;
+    serialize(FilePath, socketStream);
+    std::string serializedData = socketStream.str();
+    return serializedData;
+}
 
 
 void deserialize(const std::string& inputFile, std::filesystem::path& filePath, std::uintmax_t& fileSize, std::filesystem::file_time_type& lastModTime, std::string& fileContent)

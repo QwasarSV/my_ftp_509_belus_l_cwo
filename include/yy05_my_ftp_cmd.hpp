@@ -147,12 +147,13 @@ class cmdFTP
             clientPI.socketDTP.listen();
             int clientSocket = clientPI.socketDTP.accept();
             Socket DTPserver(clientSocket);
-            std::string file = Serialize(token);
+            std::string file = prepareFile(token);
             DTPserver.send(file);
             DTPserver.closeSocket();
         }
         else if (clientPI.GetActv())
         {
+            sleep(1);
             Socket socketDTP;
             socketDTP.create();
             // clientPI.socketDTP.create();
@@ -162,7 +163,7 @@ class cmdFTP
             std::cout << "port " << port << std::endl;
             socketDTP.connect(ipAddress, port);
             // clientPI.socketDTP.connect("127.0.0.1", 12311);
-            std::string file = Serialize(token);
+            std::string file = prepareFile(token);
             socketDTP.send(file);
         }
         // std::string file = Serialize(token);

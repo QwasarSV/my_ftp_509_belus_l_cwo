@@ -28,12 +28,12 @@ my_ftp FTP Server Project
 |   |   |-- 2.3.3 Set up data transfer commands using active and passive modes
 |   |-- 2.4 File and Directory Management
 |   |   |-- 2.4.1 Determine the home directory for the "Anonymous" user ? 
-|   |   |-- 2.4.2 Implement file retrieval and listing commands ✓25%
+|   |   |-- 2.4.2 Implement file retrieval and listing commands ✓75%
 |
 |-- 3.0 Protocol Adherence and Enhancement
 |   |-- 3.1 Study and understand the FTP protocol (RFC959) ✓
 |   |-- 3.2 Implement any additional FTP commands as per protocol 
-|   |-- 3.3 Ensure data transfer adheres to active and passive modes
+|   |-- 3.3 Ensure data transfer adheres to active and passive modes ✓
 |
 |-- 4.0 Testing and Debugging
 |   |-- 4.1 Unit Testing

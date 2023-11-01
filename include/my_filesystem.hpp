@@ -14,7 +14,9 @@ std::string dirtyCWD(const std::string& pathToNewDir);
 
 unsigned int GetFileSize(std::string filename);
 std::filesystem::directory_entry getFileInfo();
-std::string Serialize(const std::filesystem::path& filePath);
-void deserialize(const std::string& inputFile, std::filesystem::path& filePath, std::uintmax_t& fileSize, std::filesystem::file_time_type& lastModTime, std::string& fileContent);
+// std::string Serialize(const std::filesystem::path& filePath);
+// void deserialize(const std::string& inputFile, std::filesystem::path& filePath, std::uintmax_t& fileSize, std::filesystem::file_time_type& lastModTime, std::string& fileContent);
 
+void serialize(const std::filesystem::path& filePath, std::ostream& os);
+std::string prepareFile(std::string FilePath);
 #endif

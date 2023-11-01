@@ -1,5 +1,5 @@
 #include <main_header.hpp>
-
+#include <string>
 
 std::string createPortString(int local_port)
 {
@@ -54,6 +54,93 @@ int setDTP_PORT(const std::string& token)
     iss >> keyword >> value;
     std::cout << "value"  << value <<std::endl;
     return value;
+}
+
+// void deserialize(const std::string& inputFile, std::filesystem::path& filePath, std::uintmax_t& fileSize, std::filesystem::file_time_type& lastModTime, std::string& fileContent)
+// {
+//     std::ifstream in(inputFile, std::ios::binary);
+//     if (!in)
+//     {
+//         std::cerr << "Failed to open input file for deserialization." << std::endl;
+//         return;
+//     }
+
+//     // Read metadata
+//     std::string pathStr;
+//     std::getline(in, pathStr);
+//     filePath = pathStr;   // Assign string to path
+//     in >> fileSize;
+//     in.ignore(); // skip '\n'
+//     std::int64_t timeCount;
+//     in >> timeCount;
+//     in.ignore(); // skip '\n'
+//     lastModTime = std::filesystem::file_time_type(std::chrono::duration_cast<std::filesystem::file_time_type::duration>(std::chrono::nanoseconds(timeCount)));
+
+//     // Read actual file content
+//     fileContent.assign((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+
+//     in.close();
+// }
+
+// void deserialize(std::istream& is, std::filesystem::path& fileName, std::filesystem::path& filePath, std::uintmax_t& fileSize, std::filesystem::file_time_type& lastModTime, std::string& fileContent) {
+//     // Read metadata
+//     std::getline(is, fileName);
+//     std::getline(is, filePath);
+//     is >> fileSize;
+//     is.ignore();
+//     std::int64_t timeCount;
+//     is >> timeCount;
+//     is.ignore();
+//     lastModTime = std::filesystem::file_time_type(std::chrono::duration_cast<std::filesystem::file_time_type::duration>(std::chrono::nanoseconds(timeCount)));
+
+//     // Read actual file content
+//     fileContent.assign((std::istreambuf_iterator<char>(is)), std::istreambuf_iterator<char>());
+// }
+
+void deserialize(std::istream& is, std::filesystem::path& fileName, std::filesystem::path& filePath, std::uintmax_t& fileSize, std::filesystem::file_time_type& lastModTime, std::string& fileContent) {
+    // Temporary strings to store path values
+    std::string tempFileName;
+    std::string tempFilePath;
+
+    // Read metadata into temporary strings
+    std::getline(is, tempFileName);
+    std::getline(is, tempFilePath);
+    
+    // Assign the strings to the filesystem::path objects
+    fileName = tempFileName;
+    filePath = tempFilePath;
+
+    is >> fileSize;
+    is.ignore();
+    std::int64_t timeCount;
+    is >> timeCount;
+    is.ignore();
+    lastModTime = std::filesystem::file_time_type(std::chrono::duration_cast<std::filesystem::file_time_type::duration>(std::chrono::nanoseconds(timeCount)));
+
+    // Read actual file content
+    fileContent.assign((std::istreambuf_iterator<char>(is)), std::istreambuf_iterator<char>());
+}
+
+
+void recoverFile(std::string file)
+{
+    std::stringstream socketStream(file);
+    std::filesystem::path deserializedFileName;
+    std::filesystem::path deserializedFilePath;
+    std::uintmax_t deserializedSize;
+    std::filesystem::file_time_type deserializedModTime;
+    std::string deserializedContent;
+
+    deserialize(socketStream, deserializedFileName, deserializedFilePath, deserializedSize, deserializedModTime, deserializedContent);
+
+    std::cout << "Deserialized file name: " << deserializedFileName << std::endl;
+    std::cout << "Deserialized path: " << deserializedFilePath << std::endl;
+    std::cout << "Deserialized size: " << deserializedSize << std::endl;
+    std::cout << "Deserialized last modification time (nanoseconds since epoch): " << deserializedModTime.time_since_epoch().count() << std::endl;
+
+    std::ofstream out(deserializedFileName, std::ios::binary);
+    out << deserializedContent;
+    out.close();
 }
 
 
@@ -129,9 +216,11 @@ int main()
                             int serverSocket = DTP.waitClientReq();
                             Socket ServerDTP(serverSocket);
                             resp = ServerDTP.receive();
+                            recoverFile(resp);
                             std::cout << resp << std::endl;
                             // ServerDTP.closeSocket();
                             resp = client.receiveFrom();
+                            
                             std::cout << resp << std::endl;
                         }
                 }
