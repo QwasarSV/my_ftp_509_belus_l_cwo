@@ -8,6 +8,7 @@ unsigned short toUnsShort(int num)
     return us;
 }
 
+
 bool Socket::create()
 {
     socketFd = socket(AF_INET, SOCK_STREAM, 0);
@@ -20,6 +21,7 @@ bool Socket::create()
         return false;
     }
 }
+
 
 bool Socket::bind(unsigned short port)
 {
@@ -35,6 +37,7 @@ bool Socket::bind(unsigned short port)
     return false;
 }
 
+
 bool Socket::listen()
 {
     if (::listen(socketFd, 1) == -1)
@@ -45,6 +48,7 @@ bool Socket::listen()
     return true;
 }
 
+
 int Socket::accept()
 {
     sockaddr_in clientInfo;
@@ -54,12 +58,13 @@ int Socket::accept()
     return clientSocket;
 }
 
+
 bool Socket::connect(const std::string &serverIp, unsigned short port)
 {
     socketFd = socket(AF_INET, SOCK_STREAM, 0);
     if (socketFd == -1)
     {
-        // error big bad ?
+        throw socketError("endpoint creation FAILLED in ::connect");
     }
     struct sockaddr_in clientInfo;
     clientInfo.sin_family = AF_INET;
@@ -67,22 +72,21 @@ bool Socket::connect(const std::string &serverIp, unsigned short port)
     memset(clientInfo.sin_zero, 0, sizeof(clientInfo.sin_zero));
     if (inet_pton(AF_INET, serverIp.c_str(), &clientInfo.sin_addr) <= 0)
     {
-        // error big bad ?
+        std::cerr << "conversion FAILED in ::connect" << std::endl;
         return false; 
     }
     if (::connect(socketFd, (struct sockaddr *)&clientInfo, sizeof(clientInfo)) == -1)
     {
-        // error big bad ?
+        std::cerr << "connection FAILED in ::connect" << std::endl;
         return false;
     }
     std::cout << "connection established" << std::endl;
     return true;
 }
 
+
 ssize_t Socket::send(const std::string &msg)
 {
-    std::cout << "socket fd is : " << socketFd << std::endl;
-
     int len = msg.length();
     ssize_t byteSent = 0;
     byteSent += ::send(socketFd, &len, sizeof(len), 0);
@@ -91,12 +95,10 @@ ssize_t Socket::send(const std::string &msg)
 }
 
 
-
 std::string Socket::receive()
 {
     int len = 0;
     recv(socketFd, &len, sizeof(len), 0);
-    // Allocate buffer and receive the actual message
     char* buf = new char[len];
     recv(socketFd, buf, len, 0);
     std::string msg(buf, len);
@@ -104,22 +106,6 @@ std::string Socket::receive()
     return msg;
 }
 
-// ssize_t socket::receive(char* buffer, size_t len)
-// {
-//     ssize_t byteReceived = recv(socketfd, buffer, len, 0);;
-//     return byteReceived
-// }
-// std::string socket::receive()
-// {
-//     char buffer[RW_SIZE];
-//     std::string answer;
-//     size_t byteRead = 0;
-//     while ((byteRead = read(socketFd, buffer, RW_SIZE)))
-//     {
-//         answer.append(buffer, byteRead);
-//     }
-//     return answer;
-// }
 
 void Socket::closeSocket()
 {
@@ -127,29 +113,101 @@ void Socket::closeSocket()
 }
 
 
-// std::string Socket::ReceiveMessage()
-// {
-//     char buffer[RW_SIZE];
-//     std::string answer;
-//     size_t byteRead = 0;
-//     while ((byteRead = read(socketFd, buffer, RW_SIZE)))
-//     {
-//         answer.append(buffer, byteRead);
-//     }
-//     return answer;
-// }
+void Socket::setExpectedIP(std::string str)
+{
+    ExpectedIP = str;
+}
 
-// void Socket::writeMessage(const std::string& message)
-// {
-//     ssize_t byteSent = send(socketFd, message.c_str(), message.length(), 0);
-//     if (byteSent == -1)
-//     {
-//          // error big bad ? 
-//     }
-// }
 
-// int Socket::getSocket() const
-// {
-//     return socketFd;
-// }
+std::string Socket::createPortString(int local_port)
+{
+    int leftover_int = local_port % BYTE_MAX_PLUS_ONE;
+    int mult_int = std::floor(local_port / BYTE_MAX_PLUS_ONE);
+    std::string leftover_str = std::to_string(leftover_int);
+    std::string mult_str = std::to_string(mult_int);
+    std::string result = mult_str + "," + leftover_str ;
+    return result;
+}
 
+
+std::string Socket::localEndpointInfo()
+{
+    struct sockaddr_in local_address;
+    socklen_t addr_length = sizeof(local_address);
+    if (getsockname(socketFd, (struct sockaddr*)&local_address, &addr_length) == -1)
+    {
+        throw socketError("getsockname FAILED at LocalEndpointInfo");
+    }
+    else
+    {
+        char* local_ip = inet_ntoa(local_address.sin_addr);
+        int local_port = ntohs(local_address.sin_port);
+        std::string IpAddress = local_ip;
+        std::replace(IpAddress.begin(), IpAddress.end(), '.', ','); 
+        std::string localPort = createPortString(local_port);
+        std::string result = IpAddress + "," + localPort;
+        return result;
+    }
+
+}
+
+std::string Socket::remoteEndpointInfo()
+{
+    struct sockaddr_in remote_address;
+    socklen_t addr_length = sizeof(remote_address);
+    if (getpeername(socketFd, (struct sockaddr*)&remote_address, &addr_length) == -1)
+    {
+        throw socketError("getsockname FAILED at remoteEndpointInfo");
+    }
+    else
+    {
+        char* remote_ip = inet_ntoa(remote_address.sin_addr);
+        std::string IpAddress = remote_ip;
+        return IpAddress;
+    }
+    std::string result = "";
+    return result;
+}
+
+
+void SocketMov::setPasv()
+{
+    pasv = true;
+    actv = false;
+}
+
+void SocketMov::setActv()
+{
+    pasv = false;
+    actv = true;
+}
+
+void SocketMov::setExpectedPort(int port)
+{
+    expectedPort = port;
+}
+
+void SocketMov::setExpectedIp(std::string IpAddress)
+{
+    expectedIP = IpAddress;
+}
+
+bool SocketMov::getPasv()
+{
+    return pasv;
+}
+
+bool SocketMov::GetActv()
+{
+    return actv;
+}
+
+int SocketMov::getExpectedPort()
+{
+    return expectedPort;
+}
+
+std::string SocketMov::getExpectedIp()
+{
+    return expectedIP;
+}

@@ -10,6 +10,4 @@ int setDTP_PORT(const std::string& token);
 void pasvTransfer(const std::pair<std::string, int>& IpPort, std::string& line);
 void actvTransfer(int DTP_PORT);
 
-
-
 #endif

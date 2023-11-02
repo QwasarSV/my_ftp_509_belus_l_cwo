@@ -27,7 +27,7 @@ class Exec : public cmdFTP
             // funcPtrMap[S_ACC_USER]  = &cmdFTP::cmd_ACC_USER;
             // funcPtrMap[S_ACC_PASS]  = &cmdFTP::cmd_ACC_PASS;
             funcPtrMap[S_ACC_ACCT]  = &cmdFTP::cmd_ACC_ACCT;
-            // funcPtrMap[S_ACC_CWD ]  = &cmdFTP::cmd_ACC_CWD ;
+            // funcPtrMap[S_ACC_CWD ]  = &cmdFTP::cmd_ACC_CWD;
             funcPtrMap[S_ACC_CDUP]  = &cmdFTP::cmd_ACC_CDUP;
             funcPtrMap[S_ACC_SMNT]  = &cmdFTP::cmd_ACC_SMNT;
             // funcPtrMap[S_ACC_QUIT]  = &cmdFTP::cmd_ACC_QUIT;

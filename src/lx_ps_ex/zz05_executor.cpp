@@ -136,7 +136,7 @@ int launchFTP(std::string& resp, const PairVec_t& instructions, SocketMov&& clie
         if (instruction.first == S_ACC_USER)
         {
             const ValPair_t& value = instruction.second.value();
-            ex.cmd_ACC_USER(std::move(clientPI), value.first);
+            ex.cmd_ACC_USER(value.first);
         }
         else if (instruction.first == S_TPC_PASV)
         {

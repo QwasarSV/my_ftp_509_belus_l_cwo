@@ -343,10 +343,11 @@ void Lexer::clear()
 {
     tokens.clear();
     instructions.clear();
-    // charactersVec.clear();
-    // keywordsVec.clear();
-    // typesVec.clear();
-    // digitsVec.clear();
+    AccessControlCommandsVec.clear();
+    TransfertParameterCommandsVec.clear();
+    FTPservicesCommandsVec.clear();
+    charactersVec.clear();
+    digitsVec.clear();
     tmp = TokPair_t();
     readyStatus = false; 
 }

@@ -18,17 +18,17 @@ class Server
         {
             if (!serverSocket.create()) 
             {
-                // error
+                std::cerr << "Failed to create server socket" << std::endl;
                 return false;
             }
             if (!serverSocket.bind(port)) 
             {
-                // error
+                std::cerr << "Failed to bind server socket" << std::endl;
                 return false;
             }
             if (!serverSocket.listen()) 
             {
-                // error
+                std::cerr << "Failed to listen server socket" << std::endl;
                 return false;
             }
             return true;
@@ -42,7 +42,7 @@ class Server
 
         std::string getServerInfo()
         {
-            std::string result = serverSocket.LocalEndpointInfo();
+            std::string result = serverSocket.localEndpointInfo();
             return result;
         }
 
@@ -50,7 +50,7 @@ class Server
 };
 
 // void printTask(int number);
-void ftpTask(int clientSocket, const std::string& DTP_IpAddress);
+void ftpTask(int clientSocket, const std::string& path);
 
 class ServerTop : public Server
 {
@@ -60,21 +60,21 @@ class ServerTop : public Server
     public:
         ServerTop(unsigned int nbThread) : ThreadPool(nbThread) {}
 
-        bool start(int port, const std::string& DTP_IpAddress)
+        bool start(int port, const std::string& path)
         {
             if (!serverSocket.create()) 
             {
-                // error
+                std::cerr << "Failed to create server socket" << std::endl;
                 return false;
             }
             if (!serverSocket.bind(port)) 
             {
-                // error
+                std::cerr << "Failed to bind server socket" << std::endl;
                 return false;
             }
             if (!serverSocket.listen()) 
             {
-                // error
+                std::cerr << "Failed to listen server socket" << std::endl;
                 return false;
             }
 
@@ -82,7 +82,8 @@ class ServerTop : public Server
             {
                 int clientSocket = serverSocket.accept();
                 std::cout << "Incoming client connected" << std::endl;
-                ThreadPool.enqueue([clientSocket, DTP_IpAddress]() { ftpTask(clientSocket, DTP_IpAddress); });
+                ThreadPool.enqueue([clientSocket, path]() { ftpTask(clientSocket, path); });
+                sleep(1);
             }
 
             return true;

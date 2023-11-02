@@ -91,7 +91,7 @@
 #define S_CHARACTERS_COMMENT    ";"
 #define S_CHARACTERS_DECPOINT   "."
 #define S_CHARACTERS_ENDINSTR   ";;"
-
+#define S_CHARACTERS_SPACE      " "
 
 // ACCESS CONTROL COMMANDS
 #define S_ACC_USER              "USER"
