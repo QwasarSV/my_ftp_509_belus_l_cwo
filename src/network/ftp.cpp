@@ -3,10 +3,9 @@
 
 
 
-void ftpTask(int clientSocket,  const std::string& path)
+void ftpTask(int clientSocket)
 {
-    
-    MyFTP task(clientSocket, path);
+    MyFTP task(clientSocket);
 }
 
 
@@ -41,9 +40,9 @@ void ftpTask(int clientSocket,  const std::string& path)
     }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-    std::string cmdFTP::cmd_ACC_CWD (const std::string& token)
+    std::string cmdFTP::cmd_ACC_CWD (SocketMov&& clientPI, const std::string& token)
     {
-        return dirtyCWD(token);
+        return dirtyCWD(clientPI.us, token);
     }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -149,16 +148,23 @@ void ftpTask(int clientSocket,  const std::string& path)
 //---------------------------------------------------------------------
     // FTP SERVICE COMMANDS
 
-
-    bool cmdFTP::fileExist(const std::string& token)
+    bool cmdFTP::fileExist(const std::filesystem::path& baseDir, const std::string& token)
     {
-        if (std::filesystem::exists(token))
+        auto fullPath = baseDir / token;
+        std::filesystem::path canonicalPath;
+        try 
         {
-            return true;
-        } else
+            canonicalPath = std::filesystem::canonical(fullPath);
+            if (canonicalPath.string().find(baseDir.string()) != 0) 
+            {
+                throw std::runtime_error("No File");
+            }
+        } 
+        catch (const std::filesystem::filesystem_error& error)
         {
             return false;
         }
+        return std::filesystem::exists(canonicalPath) && std::filesystem::is_regular_file(canonicalPath);
     }
 
     void cmdFTP::actvTransfer(SocketMov&& clientPI, const std::string& token)
@@ -169,7 +175,7 @@ void ftpTask(int clientSocket,  const std::string& path)
         std::string ipAddress = clientPI.getExpectedIp();
         int port = clientPI.getExpectedPort();
         socketDTP.connect(ipAddress, port);
-        std::string file = prepareFile(token);
+        std::string file = prepareFile(clientPI.us, token);
         socketDTP.send(file);
     }
 
@@ -178,7 +184,7 @@ void ftpTask(int clientSocket,  const std::string& path)
         clientPI.socketDTP.listen();
         int clientSocket = clientPI.socketDTP.accept();
         Socket DTPserver(clientSocket);
-        std::string file = prepareFile(token);
+        std::string file = prepareFile(clientPI.us, token);
         DTPserver.send(file);
         DTPserver.closeSocket();
     }
@@ -187,7 +193,8 @@ void ftpTask(int clientSocket,  const std::string& path)
     std::string cmdFTP::cmd_FCS_RETR(SocketMov&& clientPI, const std::string& token)
     {
         std::string result;
-        if (fileExist(token))
+        std::string baseDir = clientPI.us.getCurrentDir().string();
+        if (fileExist(baseDir, token))
         {
             clientPI.send(S_CS_150);
             if (!clientPI.getPasv() && !clientPI.GetActv())
@@ -289,15 +296,15 @@ void ftpTask(int clientSocket,  const std::string& path)
     }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-    std::string cmdFTP::cmd_FCS_PWD()
+    std::string cmdFTP::cmd_FCS_PWD(SocketMov&& clientPI)
     {
-        return dirtyPWD();
+        return dirtyPWD(clientPI.us);
     }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-    std::string cmdFTP::cmd_FCS_LIST()
+    std::string cmdFTP::cmd_FCS_LIST(SocketMov&& clientPI)
     {
-        return dirtyLS();
+        return dirtyLS(clientPI.us);
     }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------

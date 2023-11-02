@@ -128,6 +128,7 @@ int launch(const PairVec_t& instructions)
     return EXIT_FAILURE;
 }
 
+
 int launchFTP(std::string& resp, const PairVec_t& instructions, SocketMov&& clientPI)
 {
     Exec ex;
@@ -150,7 +151,15 @@ int launchFTP(std::string& resp, const PairVec_t& instructions, SocketMov&& clie
         else if (instruction.first == S_ACC_CWD)
         {
             const ValPair_t& value = instruction.second.value();
-            resp = ex.cmd_ACC_CWD(value.first);
+            resp = ex.cmd_ACC_CWD(std::move(clientPI), value.first);
+        }
+        else if (instruction.first == S_FCS_PWD)
+        {
+            resp = ex.cmd_FCS_PWD(std::move(clientPI));
+        }
+        else if (instruction.first == S_FCS_LIST)
+        {
+            resp = ex.cmd_FCS_LIST(std::move(clientPI));
         }
         else if (instruction.first == S_FCS_RETR)
         {

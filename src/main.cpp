@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 
     int threadCount = GetThreadCount(2);
     ServerTop server(threadCount);
-    server.start(8080, ".");
+    server.start(8080, "/workspace/share/");
 
     return EXIT_SUCCESS;
 }

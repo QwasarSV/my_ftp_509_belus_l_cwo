@@ -50,7 +50,7 @@ class Server
 };
 
 // void printTask(int number);
-void ftpTask(int clientSocket, const std::string& path);
+void ftpTask(int clientSocket);
 
 class ServerTop : public Server
 {
@@ -62,6 +62,7 @@ class ServerTop : public Server
 
         bool start(int port, const std::string& path)
         {
+            dirtyCWDProcess(path);
             if (!serverSocket.create()) 
             {
                 std::cerr << "Failed to create server socket" << std::endl;
@@ -82,7 +83,7 @@ class ServerTop : public Server
             {
                 int clientSocket = serverSocket.accept();
                 std::cout << "Incoming client connected" << std::endl;
-                ThreadPool.enqueue([clientSocket, path]() { ftpTask(clientSocket, path); });
+                ThreadPool.enqueue([clientSocket]() { ftpTask(clientSocket); });
                 sleep(1);
             }
 

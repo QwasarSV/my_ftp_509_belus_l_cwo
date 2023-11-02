@@ -54,8 +54,8 @@ class Exec : public cmdFTP
             funcPtrMap[S_FCS_DELE]  = &cmdFTP::cmd_FCS_DELE;
             funcPtrMap[S_FCS_RMD ]  = &cmdFTP::cmd_FCS_RMD ;
             funcPtrMap[S_FCS_MKD ]  = &cmdFTP::cmd_FCS_MKD ;
-            funcPtrMap[S_FCS_PWD ]  = &cmdFTP::cmd_FCS_PWD ;
-            funcPtrMap[S_FCS_LIST]  = &cmdFTP::cmd_FCS_LIST;
+            // funcPtrMap[S_FCS_PWD ]  = &cmdFTP::cmd_FCS_PWD ;
+            // funcPtrMap[S_FCS_LIST]  = &cmdFTP::cmd_FCS_LIST;
             funcPtrMap[S_FCS_NLST]  = &cmdFTP::cmd_FCS_NLST;
             funcPtrMap[S_FCS_SITE]  = &cmdFTP::cmd_FCS_SITE;
             funcPtrMap[S_FCS_SYST]  = &cmdFTP::cmd_FCS_SYST;

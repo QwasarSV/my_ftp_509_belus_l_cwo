@@ -7,18 +7,12 @@
 
 extern  bool handleClientInput(std::string& resp, Lexer& lx, std::string& cmd, SocketMov&& clientPI);
 
+
 class MyFTP
 {
     private:
         std::string resp;
         bool stop = false;
-
-        void set_dir(const std::string& path, Lexer& lx, SocketMov&& clientPI)
-        {
-            std::string cmd = "CWD " + path + " EXIT" + " ;;";
-            std::string resp;
-            handleClientInput(resp, lx, cmd, std::move(clientPI));
-        }
 
         void clientExhange(SocketMov&& clientPI)
         {
@@ -42,13 +36,12 @@ class MyFTP
     public:
         SocketMov clientPI;
         Lexer lx;
-        MyFTP(int clientSock = -1, const std::string& path = "") : clientPI(SocketMov(clientSock))
-        { 
+        MyFTP(int clientSock = -1) : clientPI(SocketMov(clientSock))
+        {
             if (clientSock == -1)
             {
                 std::cerr << "Connection Failed" << std::endl;
             }
-            set_dir(path, lx, std::move(clientPI));
             clientPI.send(S_CS_220);
             while (!stop)
             {
@@ -61,5 +54,8 @@ class MyFTP
 
         ~MyFTP() {}
 };
+
+
+
 
 #endif

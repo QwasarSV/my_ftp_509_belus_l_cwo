@@ -46,6 +46,7 @@ class SocketMov : public Socket
         bool actv = false;
     public:
         Socket socketDTP;
+        UserSession us;
         SocketMov(int fd) : Socket(fd) {}
         SocketMov(SocketMov&& other) noexcept : socketFd(std::move(other.socketFd))
         {

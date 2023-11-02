@@ -18,7 +18,7 @@ class cmdFTP
     std::string cmd_ACC_USER(const std::string& token);
     std::string cmd_ACC_PASS(const std::string& token);
     std::string cmd_ACC_ACCT();
-    std::string cmd_ACC_CWD (const std::string& token);
+    std::string cmd_ACC_CWD (SocketMov&& clientPI, const std::string& token);
     std::string cmd_ACC_CDUP();
     std::string cmd_ACC_SMNT();
     std::string cmd_ACC_REIN();
@@ -32,7 +32,7 @@ class cmdFTP
     std::string cmd_TPC_MODE();
 
     // FTP SERVICE COMMANDS
-    bool fileExist(const std::string& token);
+    bool fileExist(const std::filesystem::path& baseDir, const std::string& token);
     void actvTransfer(SocketMov&& clientPI, const std::string& token);
     void pasvTranfer(SocketMov&& clientPI, const std::string& token);
     std::string cmd_FCS_RETR(SocketMov&& clientPI, const std::string& token);
@@ -47,8 +47,8 @@ class cmdFTP
     std::string cmd_FCS_DELE();
     std::string cmd_FCS_RMD();
     std::string cmd_FCS_MKD();
-    std::string cmd_FCS_PWD();
-    std::string cmd_FCS_LIST();
+    std::string cmd_FCS_PWD(SocketMov&& clientPI);
+    std::string cmd_FCS_LIST(SocketMov&& clientPI);
     std::string cmd_FCS_NLST();
     std::string cmd_FCS_SITE();
     std::string cmd_FCS_SYST();
