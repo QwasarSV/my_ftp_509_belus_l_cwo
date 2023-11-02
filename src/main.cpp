@@ -17,19 +17,14 @@
 
 int main(int argc, char** argv)
 {
-    // std::vector<std::string> tokens;
-
-    // for (int i = 0; i < argc; ++i) {
-    //     tokens.push_back(std::string(argv[i]));
-    // }
-
     // MyGeOpt* GetOptObj = new MyGeOpt;
     // GetOptObj->FlagParser(tokens);
     // delete GetOptObj;
 
+    int port = std::stoi(argv[1]);
     int threadCount = GetThreadCount(2);
     ServerTop server(threadCount);
-    server.start(8080, "/workspace/share/");
+    server.start(port, argv[2]);
 
     return EXIT_SUCCESS;
 }

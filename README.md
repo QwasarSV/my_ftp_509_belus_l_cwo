@@ -2,10 +2,53 @@
 ***
 
 ## Task
-TODO - What is the problem? And where is the challenge?
+
+
+Create a FTP server.
+
+File Transfer Protocol (FTP) is a standard Internet protocol for transmitting files between computers on the Internet over TCP/IP connections. FTP is a client-server protocol where a client will ask for a file, and a local or remote server will provide it.
+
+You will have to follow the protocol (RFC959)
+
+The network communication will be achieved with TCP sockets.
+
+Server will start with the port and the path of where file can be access:
+
+Usage : ./server port path
+port is the port number on which the server socket is listening.
+
+path is the path to the home directory for the "Anonymous" user.
+
+The server MUST be able to handle several clients at the same time by using a
+thread.
+
+I think using a thread pool is cool. :-)
+
+Your server must also have those features:
+
+An authentication with an "Anonymous" account and an empty password
+Data transfer MUST use "active" or "passive" mode as explained in the protocol.
+
 
 ## Description
-TODO - How have you solved the problem?
+
+
+The task is to reproduce a FTP SERVER  to transmit files over a TCP/IP connections. 
+
+The Client asks for a file and the Server provices it, the server should be able to handlemultiple users at once through the usage of multithreading.
+
+The users needs to be able to roam through the directories independently from one another.
+
+Active and passive mode to tranfer the file is available; 
+- active Mode will have the server connect to client; 
+- passive Mode will let the user connect to server; 
+
+The Project has several main components 
+- LEXER/PARSER
+- Server FTP
+- Client 
+
+
 
 
 ```
@@ -66,14 +109,14 @@ Days 6-8:
 - Implement FTP Command Handling (USER, PASS, LIST, RETR, etc.) ✓
 - Implement Active and Passive Modes ✓
 Days 9-10:
-- File and Directory Management ✓75%
-- Additional FTP Commands and Features ✓25%
+- File and Directory Management ✓
+- Additional FTP Commands and Features ✓
 Days 11-12:
 - Thorough Testing (Unit, Integration, Protocol Adherence)
 Days 13:
-- Documentation, Code Cleanup, Addressing Known Issues
+- Documentation, Code Cleanup, Addressing Known Issues 75%✓
 Day 14:
-- Compilation, Packaging, and Delivery
+- Compilation, Packaging, and Delivery ✓
 
 ```
 
@@ -97,13 +140,153 @@ Day 14:
                   Server-FTP                   USER-FTP
 ```
 
+project BNF : 
+```
+*SP = space
+*CRLF Carriage Return Line Feed
+
+            USER <SP> <username> <CRLF>
+            PASS <SP> <password> <CRLF>
+            ACCT <SP> <account-information> <CRLF>
+            CWD  <SP> <pathname> <CRLF>
+            CDUP <CRLF>
+            SMNT <SP> <pathname> <CRLF>
+            QUIT <CRLF>
+            REIN <CRLF>
+
+            PORT <SP> <host-port> <CRLF>
+            PASV <CRLF>
+            TYPE <SP> <type-code> <CRLF>
+            STRU <SP> <structure-code> <CRLF>
+            MODE <SP> <mode-code> <CRLF>
+
+            RETR <SP> <pathname> <CRLF>
+            STOR <SP> <pathname> <CRLF>
+            STOU <CRLF>
+            APPE <SP> <pathname> <CRLF>
+            ALLO <SP> <decimal-integer>
+                [<SP> R <SP> <decimal-integer>] <CRLF>
+            REST <SP> <marker> <CRLF>
+            RNFR <SP> <pathname> <CRLF>
+            RNTO <SP> <pathname> <CRLF>
+            ABOR <CRLF>
+            DELE <SP> <pathname> <CRLF>
+            RMD  <SP> <pathname> <CRLF>
+            MKD  <SP> <pathname> <CRLF>
+            PWD  <CRLF>
+            LIST [<SP> <pathname>] <CRLF>
+            NLST [<SP> <pathname>] <CRLF>
+            SITE <SP> <string> <CRLF>
+            SYST <CRLF>
+            STAT [<SP> <pathname>] <CRLF>
+            HELP [<SP> <string>] <CRLF>
+            NOOP <CRLF>
+
+            <username> ::= <string>
+            <password> ::= <string>
+            <account-information> ::= <string>
+            <string> ::= <char> | <char><string>
+            <char> ::= any of the 128 ASCII characters except <CR> and
+            <LF>
+            <marker> ::= <pr-string>
+            <pr-string> ::= <pr-char> | <pr-char><pr-string>
+            <pr-char> ::= printable characters, any
+                          ASCII code 33 through 126
+            <byte-size> ::= <number>
+            <host-port> ::= <host-number>,<port-number>
+            <host-number> ::= <number>,<number>,<number>,<number>
+            <port-number> ::= <number>,<number>
+            <number> ::= any decimal integer 1 through 255
+            <form-code> ::= N | T | C
+            <type-code> ::= A [<sp> <form-code>]
+                          | E [<sp> <form-code>]
+                          | I
+                          | L <sp> <byte-size>
+            <structure-code> ::= F | R | P
+            <mode-code> ::= S | B | C
+            <pathname> ::= <string>
+            <decimal-integer> ::= any decimal integer
+```
+
 ## Installation
-TODO - How to install your project? npm install? make? make re?
+
+Insert inside the terminal :
+to build the Server; 
+
+From the main directory : 
+1.
+```bash
+make
+```
+2.
+```bash
+make fclean
+```
+
+or
+
+1.
+```bash
+make debug
+```
+2.
+```bash
+make debugc
+```
+
+From the clientFTP directory :
+
+1.
+```bash
+make
+```
+2.
+```bash
+make fclean
+```
+
+or
+
+1.
+```bash
+make debug
+```
+2.
+```bash
+make debugc
+```
 
 ## Usage
-TODO - How does it work?
+
+The Following CMD are available 
+
+
+Every command existing on the bnf will receive an answer from the server, but only USER, PASS, CWD, PWD, LIST, PASV, PORT and RETR have been implemented; 
+
+USER will only anwer to "anonymous"
+NO password is required 
+
+
 ```
-./my_project argument1 argument2
+Usage: ./my_ftp port path
+example: ./my_ftp 8080 .
+
+Go to client and launch the program 
+
+usage ./my_client_ftp port
+example: ./my_client_ftp 8080 
+
+CMD list : 
+
+USER anonymous
+PASS <password>
+CWD <dir> or <..>
+PWD
+LIST
+PASV
+PORT <port-number>
+RETR <filename or filepath>
+
 ```
 
 ### The Core Team

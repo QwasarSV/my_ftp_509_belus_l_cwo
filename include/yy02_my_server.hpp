@@ -84,9 +84,9 @@ class ServerTop : public Server
                 int clientSocket = serverSocket.accept();
                 std::cout << "Incoming client connected" << std::endl;
                 ThreadPool.enqueue([clientSocket]() { ftpTask(clientSocket); });
+
                 sleep(1);
             }
-
             return true;
         }
         ~ServerTop() {}

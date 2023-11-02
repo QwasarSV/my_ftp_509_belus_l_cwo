@@ -1,11 +1,17 @@
 // #include <yy04_my_ftp.hpp>
 #include <main_header.hpp>
 
-
+void signalHandler(int signum) 
+{
+    std::cout << "Interrupt signal (" << signum << ") received.\n";
+    
+    // exit(signum);
+}
 
 void ftpTask(int clientSocket)
 {
     MyFTP task(clientSocket);
+
 }
 
 
@@ -17,7 +23,8 @@ void ftpTask(int clientSocket)
         {
             result = S_CS_230;
             
-        } else 
+        }
+        else 
         {
             result = S_CS_530;
         }

@@ -1,6 +1,6 @@
 #ifndef MY_FTP_
 #define MY_FTP_
-
+#include <csignal>
 
 // #include <yy00_my_main_server.hpp>
 #include <main_header.hpp>

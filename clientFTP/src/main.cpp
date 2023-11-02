@@ -4,9 +4,10 @@
 
 
 
-int main()
+int main(int argc, char** argv)
 {
-    const int PORT = 8080;
+    int port = std::stoi(argv[1]);
+    const int PORT = port;
     const std::string HOST = "127.0.0.1";
     Client client;
     int DTP_PORT = 0;
